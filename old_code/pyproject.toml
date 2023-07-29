@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "thumptumble"
+version = "0.1.0"
+description = ""
+authors = ["Lee Harrold <lhharrold@sep.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+openai-whisper = {git = "https://github.com/openai/whisper.git"}
+fastllama = {git = "https://github.com/PotatoSpudowski/fastLLaMa.git", rev = "main"}
+fastapi = "^0.95.1"
+python-multipart = "^0.0.6"
+uvicorn = "^0.22.0"
+openai = "^0.27.7"
+python-dotenv = "^1.0.0"
+tts = "^0.14.0"
+langchain = "^0.0.197"
+
+[tool.poetry.scripts]
+start = "thumptumble.main:start"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
