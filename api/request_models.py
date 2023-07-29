@@ -29,15 +29,18 @@ class ChunkTextRequestDto:
 
 class ReadTextRequestSchema(Schema):
     text = fields.Str(required=True)
-
+    emotion = fields.Str(required=True)
+    speed = fields.Float(required=True)
     @post_load
     def make_dto(self, data, **kwargs):
         return ChunkTextRequestDto(**data)
 
 
 class ReadTextRequestDto:
-    def __init__(self, text) -> None:
+    def __init__(self, text, emotion,speed) -> None:
         self.text = text
+        self.emotion = emotion
+        self.speed = speed
 
 
 class QuestionTextRequestSchema(Schema):

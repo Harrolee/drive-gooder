@@ -1,7 +1,9 @@
 Flask==2.3.2
 uWSGI==2.0.21
 marshmallow
-langchain==0.0.247
-openai==0.27.8
-Flask-HTTPAuth
-python-dotenv
+flask_httpauth
+openai-whisper @ git+https://github.com/openai/whisper.git
+openai>=^0.27.7
+python-dotenv>=1.0.0
+tts>=0.14.0
+langchain>=0.0.197
