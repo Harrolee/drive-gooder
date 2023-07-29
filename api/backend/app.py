@@ -1,14 +1,13 @@
-from dotenv import load_dotenv
-
-load_dotenv(".env")
-
 from flask import Flask, request
 from flask import jsonify
 from flask_httpauth import HTTPBasicAuth
-from handlers.answer_question import answer_question_handler
-from handlers.read_text import get_audio_for_text_handler
-from request_models import QuestionTextRequestDto, QuestionTextRequestSchema
-from request_models import (
+# Must import env vars before import modules that use env vars
+from dotenv import load_dotenv  # noqa
+load_dotenv(".env")  # noqa
+from backend.handlers.answer_question import answer_question_handler
+from backend.handlers.read_text import get_audio_for_text_handler
+from backend.request_models import QuestionTextRequestDto, QuestionTextRequestSchema
+from backend.request_models import (
     SummarizeRequestDto,
     SummarizeRequestSchema,
     ChunkTextRequestSchema,
@@ -16,13 +15,13 @@ from request_models import (
     ReadTextRequestSchema,
     ReadTextRequestDto,
 )
-import functools
-from marshmallow import Schema, ValidationError
-from os import environ
-from werkzeug.security import generate_password_hash, check_password_hash
-from handlers.summarize import summarize_handler
-from handlers.chunk_text import chunk_text_handler
 from typing import IO, Dict
+from backend.handlers.chunk_text import chunk_text_handler
+from backend.handlers.summarize import summarize_handler
+from werkzeug.security import generate_password_hash, check_password_hash
+from os import environ
+from marshmallow import Schema, ValidationError
+import functools
 
 
 app = Flask(__name__)

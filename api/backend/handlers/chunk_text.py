@@ -1,4 +1,4 @@
-from request_models import ChunkTextRequestDto
+from backend.request_models import ChunkTextRequestDto
 
 
 def chunk_text_handler(input_text: ChunkTextRequestDto):

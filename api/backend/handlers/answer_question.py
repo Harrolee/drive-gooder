@@ -1,6 +1,6 @@
 from typing import IO
-from request_models import QuestionTextRequestDto
-from llm.factory import build_speech_to_text, build_ask_question
+from backend.request_models import QuestionTextRequestDto
+from backend.llm.factory import build_speech_to_text, build_ask_question
 
 
 def answer_question_handler(question_audio, data: QuestionTextRequestDto):
