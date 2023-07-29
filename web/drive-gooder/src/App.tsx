@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import AudioPlayer from 'react-h5-audio-player';
 import SetupPage from "./component/SetupPage";
 import Slider from "@mui/material/Slider";
 import Select from "@mui/material/Select";
@@ -36,7 +37,12 @@ function App() {
     <div className="App">
       {onPlayBack ? null : SetupPage({ articleText, setArticleText })}
       <Button onClick={onPlayBack ? goToSetup : submitArticle}>Submit</Button>
-
+      <AudioPlayer
+        autoPlay
+        src="./audio/buzzbuzzbuzz.mp3"
+        onPlay={e => console.log("onPlay")}
+        // other props here
+      />
       <Select
         value={emotionValue}
         onChange={handleEmotionChange}
