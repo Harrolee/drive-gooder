@@ -3,3 +3,5 @@ uWSGI==2.0.21
 marshmallow
 langchain==0.0.247
 openai==0.27.8
+Flask-HTTPAuth
+python-dotenv
