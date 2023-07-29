@@ -1,6 +1,7 @@
 __pycache__
 node_modules/
 .env
+api/output
 
 # These are training checkpoints
 *.pth
