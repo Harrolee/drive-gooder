@@ -117,5 +117,5 @@ def answer_question(file_data: IO, data: QuestionTextRequestDto):
     return answer_question_handler(file_data, data), 200
 
 
-if __name__ == "__main__":
+def start():
     app.run(port=5003)
