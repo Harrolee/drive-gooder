@@ -1,17 +1,16 @@
+from typing import BinaryIO
+from flask import send_file
 from backend.request_models import ReadTextRequestDto
-from TTS.api import TTS
-
-model: str = "tts_models/en/vctk/vits"
-speaker: str = "p225"
-tts = TTS(model)
+from backend.llm.factory import build_text_to_speech
 
 
-def get_audio_for_text_handler(text: ReadTextRequestDto):
-    generate_tts(text=text.text, filepath="",
-                 emotion=text.emotion, speed=text.speed)
-    return text.text
+def get_audio_for_text_handler(data: ReadTextRequestDto):
+    text_to_speech = build_text_to_speech()
+    audio_content = text_to_speech(data.text, data.emotion, data.speed)
 
+    buffer = BinaryIO()
+    buffer.write(audio_content)
+    buffer.seek(0)
 
-def generate_tts(text: str, filepath: str, emotion: str, speed: float):
-    tts.tts_to_file(text=text, speaker=speaker,
-                    file_path=filepath, emotion=emotion, speed=speed)
+    # TODO: Figure out why this is returning an emtpy file
+    return send_file(buffer, mimetype="audio/wav", download_name="output.wav")
