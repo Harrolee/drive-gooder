@@ -3,6 +3,8 @@ from marshmallow import Schema, fields, post_load
 
 class SummarizeRequestSchema(Schema):
     text = fields.Str(required=True)
+    emotion = fields.Str(required=True)
+    speed = fields.Float(required=True)
 
     @post_load
     def make_dto(self, data, **kwargs):
@@ -10,8 +12,10 @@ class SummarizeRequestSchema(Schema):
 
 
 class SummarizeRequestDto:
-    def __init__(self, text) -> None:
+    def __init__(self, text, emotion, speed) -> None:
         self.text = text
+        self.emotion = emotion
+        self.speed = speed
 
 
 class ChunkTextRequestSchema(Schema):
@@ -45,12 +49,16 @@ class ReadTextRequestDto:
 
 class QuestionTextRequestSchema(Schema):
     text = fields.Str(required=True)
+    emotion = fields.Str(required=True)
+    speed = fields.Float(required=True)
 
     @post_load
     def make_dto(self, data, **kwargs):
-        return ChunkTextRequestDto(**data)
+        return QuestionTextRequestDto(**data)
 
 
 class QuestionTextRequestDto:
-    def __init__(self, text) -> None:
+    def __init__(self, text, emotion, speed) -> None:
         self.text = text
+        self.emotion = emotion
+        self.speed = speed
