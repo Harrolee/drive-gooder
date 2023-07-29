@@ -111,7 +111,7 @@ def get_audio_for_text(data: ReadTextRequestDto):
 
 @app.route("/ask", methods=["POST"])
 @auth.verify_password
-@validate_file_on_request("question.mp3")
+@validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
 def answer_question(file_data: IO, data: QuestionTextRequestDto):
     return answer_question_handler(file_data, data), 200
