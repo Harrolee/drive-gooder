@@ -5,8 +5,8 @@ load_dotenv(".env")
 from flask import Flask, request
 from flask import jsonify
 from flask_httpauth import HTTPBasicAuth
-from answer_question import answer_question_handler
-from read_text import get_audio_for_text_handler
+from handlers.answer_question import answer_question_handler
+from handlers.read_text import get_audio_for_text_handler
 from request_models import QuestionTextRequestDto, QuestionTextRequestSchema
 from request_models import (
     SummarizeRequestDto,
@@ -20,8 +20,8 @@ import functools
 from marshmallow import Schema, ValidationError
 from os import environ
 from werkzeug.security import generate_password_hash, check_password_hash
-from summarize import summarize_handler
-from chunk_text import chunk_text_handler
+from handlers.summarize import summarize_handler
+from handlers.chunk_text import chunk_text_handler
 from typing import IO, Dict
 
 
@@ -89,29 +89,29 @@ def healthCheck():
 
 
 @app.route("/summarize", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(SummarizeRequestSchema())
 def summarize(data: SummarizeRequestDto):
     return summarize_handler(data), 200
 
 
 @app.route("/split", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(ChunkTextRequestSchema())
 def chunk_text(data: ChunkTextRequestDto):
     return chunk_text_handler(data), 200
 
 
 @app.route("/read", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(ReadTextRequestSchema())
 def get_audio_for_text(data: ReadTextRequestDto):
     return get_audio_for_text_handler(data), 200
 
 
 @app.route("/ask", methods=["POST"])
-@auth.verify_password
-@validate_file_on_request("question.mp3")
+@auth.login_required
+@validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
 def answer_question(file_data: IO, data: QuestionTextRequestDto):
     return answer_question_handler(file_data, data), 200
