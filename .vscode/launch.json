@@ -13,10 +13,12 @@
         "FLASK_APP": "api/app.py",
         "FLASK_DEBUG": "1"
       },
+      "envFile": "${workspaceFolder}/api/.env",
       "args": [
         "run",
         "--no-debugger",
-        "--no-reload"
+        "--no-reload",
+        "--port", "5003"
       ],
       "jinja": true,
       "justMyCode": true
