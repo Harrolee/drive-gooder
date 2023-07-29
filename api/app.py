@@ -31,3 +31,7 @@ def healthCheck():
 @validate_request_json(LoginRequestSchema())
 def login(data: LoginRequestDto):
     return "", 200
+
+
+if __name__ == "__main__":
+    app.run()
