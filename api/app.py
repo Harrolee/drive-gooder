@@ -89,28 +89,28 @@ def healthCheck():
 
 
 @app.route("/summarize", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(SummarizeRequestSchema())
 def summarize(data: SummarizeRequestDto):
     return summarize_handler(data), 200
 
 
 @app.route("/split", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(ChunkTextRequestSchema())
 def chunk_text(data: ChunkTextRequestDto):
     return chunk_text_handler(data), 200
 
 
 @app.route("/read", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_request_json(ReadTextRequestSchema())
 def get_audio_for_text(data: ReadTextRequestDto):
     return get_audio_for_text_handler(data), 200
 
 
 @app.route("/ask", methods=["POST"])
-@auth.verify_password
+@auth.login_required
 @validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
 def answer_question(file_data: IO, data: QuestionTextRequestDto):
