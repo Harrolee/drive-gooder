@@ -13,8 +13,7 @@ def text_to_speech(text: str, emotion: str, speed: float):
 
     file_handle = open(path, 'rb')
     try:
-        contents = bytearray(file_handle.read())
-        return contents
+        return file_handle.read()
     finally:
         file_handle.close()
         os.remove(path)
