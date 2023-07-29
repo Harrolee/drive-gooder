@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import { ReactMic, ReactMicStopEvent } from "react-mic";
-import { getSpeech } from "./api";
+import { getSpeech } from "../api";
 export default function RecordForSpeech() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string>("");

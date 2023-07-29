@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import RecordForSpeech from "./RecordForSpeech";
+import RecordForSpeech from "./Component/RecordForSpeech";
 
 function App() {
   return (
