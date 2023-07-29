@@ -17,7 +17,9 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY . /code
-COPY nginx.conf /etc/nginx
-RUN chmod +x ./start.sh
+COPY ./cloud/nginx.conf /etc/nginx
+RUN chmod +x ./cloud/start.sh
 
-CMD ["./start.sh"]
+EXPOSE 5003
+
+CMD ["./cloud/start.sh"]
