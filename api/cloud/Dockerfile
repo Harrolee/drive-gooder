@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye
+FROM python:3.10-slim-bullseye
 
 # install curl for health check purposes
 RUN apt-get clean \
@@ -9,7 +9,8 @@ RUN apt-get -y install nginx \
     && apt-get install -y curl \
     && apt-get -y install build-essential \
     && apt-get -y install libpq-dev \
-    && apt-get -y install ffmpeg
+    && apt-get -y install ffmpeg \
+    && apt-get -y install espeak
 
 WORKDIR /code
 
