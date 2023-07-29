@@ -9,7 +9,7 @@
 * Install `poetry` (`pip install poetry`)
 
 
-# Docker
+# Docker / AWS
 ## Build Container
 docker build . -f cloud/Dockerfile -t drive-gooder-container-repository:{tag}
 
@@ -20,9 +20,9 @@ docker run -d -p 5003:5003 --env-file test.env drive-gooder-container-repository
 Will need to have the aws cli installed.
 Recommened to look at the `View push commands` output for the ecr repository in AWS.
 
-1.aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin {special-uri-for-ecr-instance}
-1.docker tag drive-gooder-container-repository:{tag} {ecr-uri}:{tag}
-1.docker push {ecr-uri}:{tag}
+1. aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin {special-uri-for-ecr-instance}
+1. docker tag drive-gooder-container-repository:{tag} {ecr-uri}:{tag}
+1. docker push {ecr-uri}:{tag}
 
 ## Update ECS to use new container
 
