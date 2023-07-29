@@ -57,6 +57,7 @@ def login(data: LoginRequestDto):
 
 
 @app.route("/summarize", methods=["POST"])
+@auth.verify_password
 @validate_request_json(SummarizeRequestSchema())
 def summarize(data: SummarizeRequestDto):
     return summarize_handler(data), 200
