@@ -20,3 +20,14 @@ class UserResponseSchema(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
     email = fields.Str()
+
+class SummarizeRequestSchema(Schema):
+    text = fields.Str(required=True)
+
+    @post_load
+    def make_dto(self, data, **kwargs):
+        return SummarizeRequestDto(**data)
+
+class SummarizeRequestDto():
+    def __init__(self, text) -> None:
+        self.text = text

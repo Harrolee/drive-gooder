@@ -1,8 +1,9 @@
 from flask import Flask, request
 from flask import jsonify
-from request_models import LoginRequestSchema, LoginRequestDto
+from request_models import LoginRequestSchema, LoginRequestDto, SummarizeRequestDto, SummarizeRequestSchema
 import functools
 from marshmallow import Schema, ValidationError
+from summarize import summarize_handler
 
 app = Flask(__name__)
 
@@ -31,6 +32,12 @@ def healthCheck():
 @validate_request_json(LoginRequestSchema())
 def login(data: LoginRequestDto):
     return "", 200
+
+
+@app.route("/summarize", methods=["POST"])
+@validate_request_json(SummarizeRequestSchema())
+def summarize(data: SummarizeRequestDto):
+    return summarize_handler(data), 200
 
 
 if __name__ == "__main__":
