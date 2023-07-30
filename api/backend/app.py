@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 from flask import jsonify
 from flask_httpauth import HTTPBasicAuth
 # Must import env vars before import modules that use env vars
@@ -25,6 +26,7 @@ import functools
 
 
 app = Flask(__name__)
+CORS(app)
 auth = HTTPBasicAuth()
 
 basic_auth_username = environ["BASIC_AUTH_USERNAME"]

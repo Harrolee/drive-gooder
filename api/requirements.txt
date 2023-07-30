@@ -1,9 +1,0 @@
-Flask==2.3.2
-Flask-HTTPAuth
-uWSGI==2.0.21
-python-dotenv
-marshmallow
-tts>=0.14.0
-langchain==0.0.247
-openai==0.27.8
-openai-whisper==20230314

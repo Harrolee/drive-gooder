@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import "./App.css";
 import AudioPlayer from 'react-h5-audio-player';
 import SetupPage from "./component/SetupPage";
 import Slider from "@mui/material/Slider";
 import Select from "@mui/material/Select";
 import { Button, MenuItem } from "@mui/material";
+import { getSplit, storeLoginCredentials } from "./api"
+import Login from "./component/Login";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginCallback = useCallback(() => {
+    storeLoginCredentials(username, password);
+    setLoggedIn(true);
+  }, [password, username]);
+
   const [onPlayBack, setOnPlayBack] = useState(false);
   const [sliderValue, setSliderValue] = useState(1);
   const [emotionValue, setEmotion] = useState("Neutral");
@@ -20,11 +31,14 @@ function App() {
     setEmotion(event.target.value);
   };
 
-  const submitArticle = () => {
+  const submitArticle = async () => {
     setOnPlayBack(true);
     console.log(`Article Text: ${articleText}`);
     console.log(`Slider Value: ${sliderValue}`);
     console.log(`Emotion: ${emotionValue}`);
+
+    const response = await getSplit(articleText);
+    console.log(response);
     //TODO: Split text
   };
   const goToSetup = () => {
@@ -35,6 +49,13 @@ function App() {
   };
   return (
     <div className="App">
+      {!loggedIn && <Login
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+        loginCallback={loginCallback} />}
+
       {onPlayBack ? null : SetupPage({ articleText, setArticleText })}
       <Button onClick={onPlayBack ? goToSetup : submitArticle}>Submit</Button>
       <AudioPlayer
