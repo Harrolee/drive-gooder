@@ -83,8 +83,13 @@ def verify_password(username, password):
     return check_password_hash(basic_auth_password, password)
 
 
-@app.route("/", methods=["GET"])
+@app.route("/authenticate", methods=["POST"])
 @auth.login_required
+def authenticate():
+    return "", 204
+
+
+@app.route("/", methods=["GET"])
 def healthCheck():
     return "", 204
 
