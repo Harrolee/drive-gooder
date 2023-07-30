@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { FormLabel, TextField, Button, FormControl } from "@mui/material"
+import { FormLabel, TextField, Button, FormControl, Box } from "@mui/material"
 
 export interface SetupPageProps {
     articleText: string;
@@ -13,9 +13,16 @@ export default function SetupPage(props: SetupPageProps) {
         props.setArticleText(event.target.value);
     }, [props]);
 
-    return <FormControl>
-        <FormLabel>Input an article</FormLabel>
-        <TextField multiline value={props.articleText} onInput={handleArticleTextChange} />
-        <Button onClick={props.submitCallback}>Submit</Button>
-    </FormControl>;
+    return <Box display="flex" justifyContent="center" alignItems="center" >
+        <FormControl>
+            <FormLabel>Input an article</FormLabel>
+            <TextField multiline value={props.articleText} onInput={handleArticleTextChange} inputProps={{
+                style: {
+                    height: "400px",
+                    width: "400px",
+                },
+            }} />
+            <Button onClick={props.submitCallback}>Submit</Button>
+        </FormControl>
+    </Box>;
 }
