@@ -1,5 +1,4 @@
 import { MenuItem, Select, Slider } from "@mui/material";
-import AudioPlayer from 'react-h5-audio-player';
 import "../styling/styles.css";
 import { useCallback, useEffect, useState } from "react";
 import { readText } from "../api";
@@ -44,11 +43,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
     }
 
     return <div>
-        <AudioPlayer
-            autoPlay
-            onPlay={e => console.log("onPlay")}
-            src={audioUrl}
-        />
+        <audio controls src={audioUrl} />
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}
