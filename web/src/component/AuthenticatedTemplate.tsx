@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import SetupPage from "./SetupPage";
-import { PlaybackPage } from "./PlaybackPage";
+import { PlaybackPage } from "./playbackPage";
 import { getSplit } from "../api";
+import React from "react";
 
 export interface AuthenticatedTemplateProps {
 }

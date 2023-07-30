@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { storeLoginCredentials } from "../api"
 import Login from "./Login";
+import React from "react";
 
 export interface UnauthenticatedTemplateProps {
     loginCallback: VoidFunction;

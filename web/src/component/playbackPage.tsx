@@ -1,6 +1,8 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import AudioPlayer from 'react-h5-audio-player';
+import "../styling/styles.css";
 import { useState } from "react";
+import React from "react";
 
 export interface PlaybackPageProps {
     articleText: string;
