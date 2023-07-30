@@ -40,17 +40,23 @@ export const getSplit = async (text: string): Promise<string[]> => {
     const data = {
         text: text,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/split`, {
+        method: "POST",
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            "Authorization": buildAuthorizationHeaderFromStoredCredentials()
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
+            "responseType": "blob",
         },
-    }).then((response) => {
-        return response.data;
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return (await response.json()) as string[];
     })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
 }
 
@@ -60,34 +66,40 @@ export const readText = (text: string, emotion: string, speed: number) => {
         emotion,
         speed,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/read`, data, {
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/read`, {
+        method: "POST",
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
             "responseType": "blob",
         },
-    }).then((response) => {
-        return response.data;
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return await response.blob();
     })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
 }
 
-export const ask = () => {
-
-}
-
-export const summarize = (text: string, emotion: string, speed: number) => {
+export const ask = (audio: Blob, text: string, emotion: string, speed: number) => {
     const data = {
         text,
         emotion,
         speed,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/summarize`, data, {
+    const formData = new FormData();
+    formData.append("question.wav", audio);
+    formData.append("text", text);
+    formData.append("emotion", emotion);
+    formData.append("speed", speed.toString());
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/ask`, data, {
         headers: {
-            "content-type": "application/json",
+            "content-type": "multipart/form-data",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
             "responseType": "blob",
@@ -95,8 +107,33 @@ export const summarize = (text: string, emotion: string, speed: number) => {
     }).then((response) => {
         return response.data;
     })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
+export const summarize = (text: string, emotion: string, speed: number): Promise<Blob> => {
+    const data = {
+        text,
+        emotion,
+        speed,
+    };
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/summarize`, {
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
+            "responseType": "blob",
+        },
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return await response.blob();
+    })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
-
 }

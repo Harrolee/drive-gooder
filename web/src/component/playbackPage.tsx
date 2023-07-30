@@ -1,8 +1,10 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import "../styling/styles.css";
-import { useCallback, useEffect, useState } from "react";
-import { readText, summarize } from "../api";
+import { useCallback, useState } from "react";
+import { ask, readText, summarize } from "../api";
 import { AudioPlayerControls } from "./AudioPlayerControls"
+import RecordAudio from "./AudioRecorder";
+import { Button } from "@mui/material";
 
 export interface PlaybackPageProps {
     articleText: string;
@@ -10,11 +12,20 @@ export interface PlaybackPageProps {
 }
 
 export function PlaybackPage(props: PlaybackPageProps) {
-    // const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
+    const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
     // const [onPlayBack, setOnPlayBack] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
     const [audioUrl, setAudioUrl] = useState<string>();
+
+    const handleAsk = async (blob: Blob) =>{
+        const response = await ask(blob, props.articleText, emotionValue, sliderValue);
+        const url = URL.createObjectURL(response);
+        const audio = document.createElement("audio");
+        audio.src = url;
+        audio.controls = true;
+        document.body.appendChild(audio);
+    };
 
     const handleSliderChange = (event: any) => {
         setSliderValue(event.target.value);
@@ -26,35 +37,38 @@ export function PlaybackPage(props: PlaybackPageProps) {
 
     const getSummary = useCallback(async () => {
         const audio = await summarize(props.articleText, emotionValue, sliderValue);
+        setAudioUrl(URL.createObjectURL(audio));
+    }, [emotionValue, props.articleText, sliderValue]);
 
-        const blob = new Blob([audio], {
+    const getCurrentAudioChuck = useCallback(async () => {
+        const currentChunk = props.splitArticleText[currentChunkNumber];
+        const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
+
+        const blob = new Blob([audioChunk], {
             type: 'audio/wav'
         });
 
         setAudioUrl(URL.createObjectURL(blob));
-    }, [emotionValue, props.articleText, sliderValue]);
+    }, [emotionValue, props.splitArticleText, sliderValue, currentChunkNumber]);
 
-    // const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
-    //     const currentChunk = props.splitArticleText[chunkNumber];
-    //     const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
-
-    //     const blob = new Blob([audioChunk], {
-    //         type: 'audio/wav'
-    //     });
-
-    //     setAudioUrl(URL.createObjectURL(blob));
-    // }, [emotionValue, props.splitArticleText, sliderValue]);
-
-    useEffect(() => {
-        getSummary();
+    const handleSummarize = useCallback(async () => {
+        setAudioUrl(undefined);
+        await getSummary();
     }, [getSummary]);
 
-    if (!audioUrl) {
-        return <div>Loading...</div>;
-    }
+    const handleRead = useCallback(async () => {
+        setAudioUrl(undefined);
+        setCurrentChunkNumber(0);
+        await getCurrentAudioChuck();
+    }, [getCurrentAudioChuck]);
 
     return <div>
-        <AudioPlayerControls src={audioUrl} />
+        <div>
+            <Button onClick={handleRead}>Read</Button>
+            <Button onClick={handleSummarize}>Summarize</Button>
+        </div>
+        {audioUrl && <AudioPlayerControls src={audioUrl} />}
+        <RecordAudio onRecordAudio={handleAsk}/>
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}
