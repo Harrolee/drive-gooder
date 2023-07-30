@@ -1,7 +1,7 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import AudioPlayer from 'react-h5-audio-player';
 import "../styling/styles.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { readText } from "../api";
 
 export interface PlaybackPageProps {
@@ -9,29 +9,12 @@ export interface PlaybackPageProps {
     splitArticleText: string[];
 }
 
-function useObjectUrl(blob: Blob) {
-    const url = useMemo(() => URL.createObjectURL(blob), [blob]);
-    useEffect(() => URL.revokeObjectURL(url), [blob, url]);
-    return url;
-}
-
-interface AudioElementProps {
-    blob: Blob;
-}
-
-function AudioElement(props: AudioElementProps) {
-    const src = useObjectUrl(props.blob);
-    return <audio
-        src={src}
-    />;
-}
-
 export function PlaybackPage(props: PlaybackPageProps) {
-    const [chunkNumber, setChunkNumber] = useState(0);
+    const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
     const [onPlayBack, setOnPlayBack] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
-    const [audioBlob, setAudioBlob] = useState<Blob>();
+    const [audioUrl, setAudioUrl] = useState<string>();
 
     const handleSliderChange = (event: any) => {
         setSliderValue(event.target.value);
@@ -41,7 +24,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
         setEmotion(event.target.value);
     };
 
-    const getCurrentAudioChuck = useCallback(async () => {
+    const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
         const currentChunk = props.splitArticleText[chunkNumber];
         const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
 
@@ -49,14 +32,14 @@ export function PlaybackPage(props: PlaybackPageProps) {
             type: 'audio/wav'
         });
 
-        setAudioBlob(blob);
-    }, [chunkNumber, emotionValue, props.splitArticleText, sliderValue]);
+        setAudioUrl(URL.createObjectURL(blob));
+    }, [emotionValue, props.splitArticleText, sliderValue]);
 
     useEffect(() => {
-        getCurrentAudioChuck();
-    }, [getCurrentAudioChuck]);
+        getCurrentAudioChuck(currentChunkNumber);
+    }, [currentChunkNumber, getCurrentAudioChuck]);
 
-    if (!audioBlob) {
+    if (!audioUrl) {
         return <div>Loading...</div>;
     }
 
@@ -64,10 +47,8 @@ export function PlaybackPage(props: PlaybackPageProps) {
         <AudioPlayer
             autoPlay
             onPlay={e => console.log("onPlay")}
-        // other props here
-        >
-            <AudioElement blob={audioBlob} />
-        </AudioPlayer>
+            src={audioUrl}
+        />
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}
