@@ -2,6 +2,7 @@ import { MenuItem, Select, Slider } from "@mui/material";
 import "../styling/styles.css";
 import { useCallback, useEffect, useState } from "react";
 import { readText, summarize } from "../api";
+import { AudioPlayerControls } from "./AudioPlayerControls"
 
 export interface PlaybackPageProps {
     articleText: string;
@@ -53,7 +54,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
     }
 
     return <div>
-        <audio controls src={audioUrl} />
+        <AudioPlayerControls src={audioUrl} />
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}

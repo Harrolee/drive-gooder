@@ -1,14 +1,21 @@
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
-// import 'react-h5-audio-player/lib/styles.less' Use LESS
-// import 'react-h5-audio-player/src/styles.scss' Use SASS
+import { useCallback, useRef } from "react";
 
-// TODO: use or remove
-export function AudioPlayerControls() {
-  return <AudioPlayer
-    autoPlay
-    src="http://example.com/audio.mp3"
-    onPlay={e => console.log("onPlay")}
-    // other props here
-  />
+interface AudioPlayerControlsProps {
+    src: string;
+}
+
+export function AudioPlayerControls(props: AudioPlayerControlsProps) {
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    const handlePlay = useCallback(() => {
+        console.log("Staring to play");
+        audioRef.current?.play();
+    }, []);
+
+    return <div>
+        <audio
+            src={props.src}
+            ref={audioRef} />
+        <button onClick={handlePlay}>Play</button>
+    </div>;
 }
