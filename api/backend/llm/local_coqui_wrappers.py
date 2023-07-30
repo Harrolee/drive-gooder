@@ -6,8 +6,9 @@ import os
 model: str = "tts_models/en/vctk/vits"
 speaker: str = "p225"
 
+tts = TTS(model)
+
 def text_to_speech(text: str, emotion: str, speed: float):
-    tts = TTS(model)
     path = _build_temporary_file_path()
     tts.tts_to_file(text=text, speaker=speaker, file_path=path, emotion=emotion, speed=speed)
 
