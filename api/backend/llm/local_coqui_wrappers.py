@@ -5,12 +5,15 @@ import os
 
 model: str = "tts_models/en/vctk/vits"
 speaker: str = "p225"
+tts = TTS(model)
+
 
 tts = TTS(model)
 
 def text_to_speech(text: str, emotion: str, speed: float):
     path = _build_temporary_file_path()
-    tts.tts_to_file(text=text, speaker=speaker, file_path=path, emotion=emotion, speed=speed)
+    tts.tts_to_file(text=text, speaker=speaker, file_path=path,
+                    emotion=emotion, speed=speed)
 
     file_handle = open(path, 'rb')
     try:
@@ -18,10 +21,14 @@ def text_to_speech(text: str, emotion: str, speed: float):
     finally:
         file_handle.close()
         os.remove(path)
+    return bytes()
+
 
 def _build_temporary_file_path():
-    filename = ''.join(random.choices(string.ascii_lowercase + string.digits, k=16))
+    filename = ''.join(random.choices(
+        string.ascii_lowercase + string.digits, k=16))
     return os.path.join(_get_current_path(), "..", "..", "output", f'{filename}.wav')
+
 
 def _get_current_path():
     return os.path.dirname(os.path.realpath(__file__))
