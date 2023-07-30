@@ -1,6 +1,6 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import "../styling/styles.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ask, readText, summarize } from "../api";
 import { AudioPlayerControls } from "./AudioPlayerControls"
 import RecordAudio from "./AudioRecorder";
@@ -39,8 +39,8 @@ export function PlaybackPage(props: PlaybackPageProps) {
         setAudioUrl(URL.createObjectURL(audio));
     }, [emotionValue, props.articleText, sliderValue]);
 
-    const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
-        const currentChunk = props.splitArticleText[chunkNumber];
+    const getCurrentAudioChuck = useCallback(async () => {
+        const currentChunk = props.splitArticleText[currentChunkNumber];
         const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
 
         const blob = new Blob([audioChunk], {
@@ -48,7 +48,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
         });
 
         setAudioUrl(URL.createObjectURL(blob));
-    }, [emotionValue, props.splitArticleText, sliderValue]);
+    }, [emotionValue, props.splitArticleText, sliderValue, currentChunkNumber]);
 
     const handleSummarize = useCallback(async () => {
         setAudioUrl(undefined);
@@ -58,7 +58,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
     const handleRead = useCallback(async () => {
         setAudioUrl(undefined);
         setCurrentChunkNumber(0);
-        await getCurrentAudioChuck(0);
+        await getCurrentAudioChuck();
     }, [getCurrentAudioChuck]);
 
     return <div>
