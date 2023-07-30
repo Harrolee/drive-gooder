@@ -17,14 +17,13 @@ export function PlaybackPage(props: PlaybackPageProps) {
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
     const [audioUrl, setAudioUrl] = useState<string>();
+    const [currentlyAsking, setCurrentlyAsking] = useState(false);
 
     const handleAsk = async (blob: Blob) =>{
+        setCurrentlyAsking(false);
         const response = await ask(blob, props.articleText, emotionValue, sliderValue);
         const url = URL.createObjectURL(response);
-        const audio = document.createElement("audio");
-        audio.src = url;
-        audio.controls = true;
-        document.body.appendChild(audio);
+        setAudioUrl(url);
     };
 
     const handleSliderChange = (event: any) => {
@@ -62,13 +61,19 @@ export function PlaybackPage(props: PlaybackPageProps) {
         await getCurrentAudioChuck();
     }, [getCurrentAudioChuck]);
 
+    const handleStartAsking = useCallback(() => {
+        setAudioUrl(undefined);
+        setCurrentlyAsking(true);
+    }, []);
+
     return <div>
         <div>
             <Button onClick={handleRead}>Read</Button>
             <Button onClick={handleSummarize}>Summarize</Button>
+            <Button onClick={handleStartAsking}>Ask</Button>
         </div>
         {audioUrl && <AudioPlayerControls src={audioUrl} />}
-        <RecordAudio onRecordAudio={handleAsk}/>
+        {currentlyAsking && <RecordAudio onRecordAudio={handleAsk} />}
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}
