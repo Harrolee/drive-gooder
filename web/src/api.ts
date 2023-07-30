@@ -1,35 +1,57 @@
 import axios from "axios";
 
 const credentials = {
-  username: "",
-  password: "",
+    username: "",
+    password: "",
 };
 
 export const storeLoginCredentials = (username: string, password: string) => {
-  credentials.username = username;
-  credentials.password = password;
+    credentials.username = username;
+    credentials.password = password;
 };
 
-const buildAuthorizationHeader = () => {
-  const data = btoa(`${credentials.username}:${credentials.password}`);
-  return `Basic ${data}`;
+const buildAuthorizationHeaderFromStoredCredentials = () => {
+    return buildAuthorizationHeader(credentials.username, credentials.password);
 };
 
-export const getSplit = async (text: string) => {
-    const data = {
-      text: text,
-    };
-    const response  = await axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
+const buildAuthorizationHeader = (username: string, password: string) => {
+    const data = btoa(`${username}:${password}`);
+    return `Basic ${data}`;
+};
+
+export const authenticate = async (username: string, password: string) => {
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/authenticate`, null, {
         headers: {
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Authorization": buildAuthorizationHeader()
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": buildAuthorizationHeader(username, password)
         },
-      }).catch((error) => {
+    }).then(() => {
+        return true;
+    })
+    .catch((error) => {
         console.error(error);
-      });
+        return false;
+    });
+}
 
-    console.log(response);
+
+export const getSplit = async (text: string): Promise<string[]> => {
+    const data = {
+        text: text,
+    };
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
+        headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials()
+        },
+    }).then((response) => {
+        return response.data;
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 }
 
 export const getTTS = (text: string, emotion: string, playbackSpeed: GLfloat) => {

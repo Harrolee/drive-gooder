@@ -9,11 +9,12 @@ export interface AuthenticatedTemplateProps {
 
 export function AuthenticatedTemplate(props: AuthenticatedTemplateProps) {
     const [articleText, setArticleText] = useState("");
+    const [splitArticleText, setSplitArticleText] = useState<string[]>([]);
     const [articleSubmitted, setArticleSubmitted] = useState(false);
 
     const handleArticleSubmit = useCallback(async () => {
         const response = await getSplit(articleText);
-        console.log(response);
+        setSplitArticleText(response);
 
         setArticleSubmitted(true);
     }, [articleText]);
@@ -22,9 +23,11 @@ export function AuthenticatedTemplate(props: AuthenticatedTemplateProps) {
         return <SetupPage
             articleText={articleText}
             setArticleText={setArticleText}
-            submitCallback={handleArticleSubmit} />
+            submitCallback={handleArticleSubmit}
+             />
     }
 
     return <PlaybackPage
-            articleText={articleText} />
+            articleText={articleText}
+            splitArticleText={splitArticleText} />
 }
