@@ -94,15 +94,14 @@ export const ask = (
   speed: number
 ) => {
   const formData = new FormData();
-  formData.append("question.wav", JSON.stringify(audio));
-  formData.append("text", text);
-  formData.append("emotion", emotion);
-  formData.append("speed", speed.toString());
+  formData.set("text", text);
+  formData.set("emotion", emotion);
+  formData.set("speed", speed.toString());
+  formData.set("question.wav", audio);
 
   return fetch(`${process.env.REACT_APP_API_ROOT}/ask`, {
     method: "POST",
     headers: {
-      "content-type": "multipart/form-data",
       "Access-Control-Allow-Origin": "*",
       Authorization: buildAuthorizationHeaderFromStoredCredentials(),
       responseType: "blob",
