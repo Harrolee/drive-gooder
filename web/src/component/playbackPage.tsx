@@ -26,12 +26,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
 
     const getSummary = useCallback(async () => {
         const audio = await summarize(props.articleText, emotionValue, sliderValue);
-
-        const blob = new Blob([audio], {
-            type: 'audio/wav'
-        });
-
-        setAudioUrl(URL.createObjectURL(blob));
+        setAudioUrl(URL.createObjectURL(audio));
     }, [emotionValue, props.articleText, sliderValue]);
 
     // const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {

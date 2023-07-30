@@ -40,17 +40,23 @@ export const getSplit = async (text: string): Promise<string[]> => {
     const data = {
         text: text,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/split`, {
+        method: "POST",
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
-            "Authorization": buildAuthorizationHeaderFromStoredCredentials()
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
+            "responseType": "blob",
         },
-    }).then((response) => {
-        return response.data;
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return (await response.json()) as string[];
     })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
 }
 
@@ -60,18 +66,23 @@ export const readText = (text: string, emotion: string, speed: number) => {
         emotion,
         speed,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/read`, data, {
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/read`, {
+        method: "POST",
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
             "responseType": "blob",
         },
-    }).then((response) => {
-        return response.data;
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return await response.blob();
     })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
 }
 
@@ -101,24 +112,28 @@ export const ask = (audio: Blob, text: string, emotion: string, speed: number) =
         });
 }
 
-export const summarize = (text: string, emotion: string, speed: number) => {
+export const summarize = (text: string, emotion: string, speed: number): Promise<Blob> => {
     const data = {
         text,
         emotion,
         speed,
     };
-    return axios.post(`${process.env.REACT_APP_API_ROOT}/summarize`, data, {
+
+    return fetch(`${process.env.REACT_APP_API_ROOT}/summarize`, {
+        method: "POST",
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
             "responseType": "blob",
         },
-    }).then((response) => {
-        return response.data;
+        body: JSON.stringify(data),
+    })
+    .then(async (response) => {
+        return await response.blob();
     })
     .catch((error) => {
         console.error(error);
+        return Promise.reject();
     });
-
 }
