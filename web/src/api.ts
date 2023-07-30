@@ -75,8 +75,30 @@ export const readText = (text: string, emotion: string, speed: number) => {
     });
 }
 
-export const ask = () => {
-
+export const ask = (audio: Blob, text: string, emotion: string, speed: number) => {
+    const data = {
+        text,
+        emotion,
+        speed,
+    };
+    const formData = new FormData();
+    formData.append("question.wav", audio);
+    formData.append("text", text);
+    formData.append("emotion", emotion);
+    formData.append("speed", speed.toString());
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/ask`, data, {
+        headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
+            "responseType": "blob",
+        },
+    }).then((response) => {
+        return response.data;
+    })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 
 export const summarize = (text: string, emotion: string, speed: number) => {
