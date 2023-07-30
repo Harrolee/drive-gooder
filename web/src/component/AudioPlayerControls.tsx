@@ -20,7 +20,8 @@ export function AudioPlayerControls(this: any, props: AudioPlayerControlsProps) 
         <audio
             id = "audio"
             src={props.src}
-            ref={audioRef}/>
+            autoPlay
+            ref={audioRef} />
         <PlayCircleOutlineIcon onClick={handlePlay}/>
         <PauseCircleOutlineIcon onClick={handlePause}/>
     </div>;
