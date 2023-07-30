@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
-
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 interface AudioPlayerControlsProps {
     src: string;
 }
@@ -20,8 +21,8 @@ export function AudioPlayerControls(this: any, props: AudioPlayerControlsProps) 
             id = "audio"
             src={props.src}
             ref={audioRef}/>
-        <button onClick={handlePlay}>Play</button>
-        <button onClick={handlePause}>Pause</button>
+        <PlayCircleOutlineIcon onClick={handlePlay}/>
+        <PauseCircleOutlineIcon onClick={handlePause}/>
     </div>;
 }
 export default AudioPlayerControls
