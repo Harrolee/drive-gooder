@@ -1,7 +1,7 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import "../styling/styles.css";
 import { useCallback, useEffect, useState } from "react";
-import { readText } from "../api";
+import { readText, summarize } from "../api";
 
 export interface PlaybackPageProps {
     articleText: string;
@@ -9,8 +9,8 @@ export interface PlaybackPageProps {
 }
 
 export function PlaybackPage(props: PlaybackPageProps) {
-    const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
-    const [onPlayBack, setOnPlayBack] = useState(false);
+    // const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
+    // const [onPlayBack, setOnPlayBack] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
     const [audioUrl, setAudioUrl] = useState<string>();
@@ -23,20 +23,30 @@ export function PlaybackPage(props: PlaybackPageProps) {
         setEmotion(event.target.value);
     };
 
-    const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
-        const currentChunk = props.splitArticleText[chunkNumber];
-        const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
+    const getSummary = useCallback(async () => {
+        const audio = await summarize(props.articleText, emotionValue, sliderValue);
 
-        const blob = new Blob([audioChunk], {
+        const blob = new Blob([audio], {
             type: 'audio/wav'
         });
 
         setAudioUrl(URL.createObjectURL(blob));
-    }, [emotionValue, props.splitArticleText, sliderValue]);
+    }, [emotionValue, props.articleText, sliderValue]);
+
+    // const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
+    //     const currentChunk = props.splitArticleText[chunkNumber];
+    //     const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
+
+    //     const blob = new Blob([audioChunk], {
+    //         type: 'audio/wav'
+    //     });
+
+    //     setAudioUrl(URL.createObjectURL(blob));
+    // }, [emotionValue, props.splitArticleText, sliderValue]);
 
     useEffect(() => {
-        getCurrentAudioChuck(currentChunkNumber);
-    }, [currentChunkNumber, getCurrentAudioChuck]);
+        getSummary();
+    }, [getSummary]);
 
     if (!audioUrl) {
         return <div>Loading...</div>;

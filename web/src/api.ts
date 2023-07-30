@@ -79,6 +79,24 @@ export const ask = () => {
 
 }
 
-export const summarize = (text: string, emotion: string, playbackSpeed: number) => {
+export const summarize = (text: string, emotion: string, speed: number) => {
+    const data = {
+        text,
+        emotion,
+        speed,
+    };
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/summarize`, data, {
+        headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
+            "responseType": "blob",
+        },
+    }).then((response) => {
+        return response.data;
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 
 }
