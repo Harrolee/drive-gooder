@@ -88,7 +88,7 @@ export const ask = (audio: Blob, text: string, emotion: string, speed: number) =
     formData.append("speed", speed.toString());
     return axios.post(`${process.env.REACT_APP_API_ROOT}/ask`, data, {
         headers: {
-            "content-type": "application/json",
+            "content-type": "multipart/form-data",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials(),
             "responseType": "blob",
