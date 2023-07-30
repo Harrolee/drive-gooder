@@ -36,21 +36,22 @@ export const authenticate = async (username: string, password: string) => {
 }
 
 
-export const getSplit = async (text: string) => {
+export const getSplit = async (text: string): Promise<string[]> => {
     const data = {
         text: text,
     };
-    const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
+    return axios.post(`${process.env.REACT_APP_API_ROOT}/split`, data, {
         headers: {
             "content-type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Authorization": buildAuthorizationHeaderFromStoredCredentials()
         },
-    }).catch((error) => {
+    }).then((response) => {
+        return response.data;
+    })
+    .catch((error) => {
         console.error(error);
     });
-
-    console.log(response);
 }
 
 export const getTTS = (text: string, emotion: string, playbackSpeed: GLfloat) => {

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export interface PlaybackPageProps {
     articleText: string;
+    splitArticleText: string[];
 }
 
 export function PlaybackPage(props: PlaybackPageProps) {
