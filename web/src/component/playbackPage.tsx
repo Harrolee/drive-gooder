@@ -11,7 +11,7 @@ export interface PlaybackPageProps {
 }
 
 export function PlaybackPage(props: PlaybackPageProps) {
-    // const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
+    const [currentChunkNumber, setCurrentChunkNumber] = useState(0);
     // const [onPlayBack, setOnPlayBack] = useState(false);
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
@@ -39,27 +39,34 @@ export function PlaybackPage(props: PlaybackPageProps) {
         setAudioUrl(URL.createObjectURL(audio));
     }, [emotionValue, props.articleText, sliderValue]);
 
-    // const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
-    //     const currentChunk = props.splitArticleText[chunkNumber];
-    //     const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
+    const getCurrentAudioChuck = useCallback(async (chunkNumber: number) => {
+        const currentChunk = props.splitArticleText[chunkNumber];
+        const audioChunk = await readText(currentChunk, emotionValue, sliderValue);
 
-    //     const blob = new Blob([audioChunk], {
-    //         type: 'audio/wav'
-    //     });
+        const blob = new Blob([audioChunk], {
+            type: 'audio/wav'
+        });
 
-    //     setAudioUrl(URL.createObjectURL(blob));
-    // }, [emotionValue, props.splitArticleText, sliderValue]);
+        setAudioUrl(URL.createObjectURL(blob));
+    }, [emotionValue, props.splitArticleText, sliderValue]);
 
-    useEffect(() => {
-        getSummary();
+    const handleSummarize = useCallback(async () => {
+        setAudioUrl(undefined);
+        await getSummary();
     }, [getSummary]);
 
-    if (!audioUrl) {
-        return <div>Loading...</div>;
-    }
+    const handleRead = useCallback(async () => {
+        setAudioUrl(undefined);
+        setCurrentChunkNumber(0);
+        await getCurrentAudioChuck(0);
+    }, [getCurrentAudioChuck]);
 
     return <div>
-        <AudioPlayerControls src={audioUrl} />
+        <div>
+            <button onClick={handleRead}>Read</button>
+            <button onClick={handleSummarize}>Summarize</button>
+        </div>
+        {audioUrl && <AudioPlayerControls src={audioUrl} />}
         <RecordAudio onRecordAudio={handleAsk}/>
         <Select
             value={emotionValue}
