@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { ask, readText, summarize } from "../api";
 import { AudioPlayerControls } from "./AudioPlayerControls"
 import RecordAudio from "./AudioRecorder";
+import { Button } from "@mui/material";
 
 export interface PlaybackPageProps {
     articleText: string;
@@ -63,8 +64,8 @@ export function PlaybackPage(props: PlaybackPageProps) {
 
     return <div>
         <div>
-            <button onClick={handleRead}>Read</button>
-            <button onClick={handleSummarize}>Summarize</button>
+            <Button onClick={handleRead}>Read</Button>
+            <Button onClick={handleSummarize}>Summarize</Button>
         </div>
         {audioUrl && <AudioPlayerControls src={audioUrl} />}
         <RecordAudio onRecordAudio={handleAsk}/>

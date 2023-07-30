@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { authenticate } from "../api";
+import { FormControl, Button, FormLabel, TextField } from "@mui/material";
 
 export interface LoginProps {
     username: string;
@@ -29,34 +30,11 @@ export default function Login(props: LoginProps) {
         }
     }, [props]);
 
-    return <div>
-        <form onSubmit={handleLogin}>
-            <div>
-                <label>Username</label>
-            </div>
-            <div>
-                <input
-                    type="text"
-                    required
-                    value={props.username}
-                    onChange={handleUsernameChange} />
-            </div>
-            <div>
-                <label>Password</label>
-            </div>
-            <div>
-                <input
-                    type="password"
-                    required
-                    name="password"
-                    value={props.password}
-                    onChange={handlePasswordChange} />
-            </div>
-            <div>
-                <input
-                    type="submit"
-                    value="Login" />
-            </div>
-        </form>
-    </div>
+    return <FormControl>
+        <FormLabel>Username</FormLabel>
+        <TextField value={props.username} onChange={handleUsernameChange} />
+        <FormLabel>Password</FormLabel>
+        <TextField type="password" value={props.password} onChange={handlePasswordChange} />
+        <Button onClick={handleLogin}>Login</Button>
+    </FormControl>;
 }
