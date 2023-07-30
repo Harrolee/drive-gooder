@@ -1,8 +1,9 @@
 import { MenuItem, Select, Slider } from "@mui/material";
 import "../styling/styles.css";
 import { useCallback, useEffect, useState } from "react";
-import { readText, summarize } from "../api";
+import { ask, readText, summarize } from "../api";
 import { AudioPlayerControls } from "./AudioPlayerControls"
+import RecordAudio from "./AudioRecorder";
 
 export interface PlaybackPageProps {
     articleText: string;
@@ -15,6 +16,15 @@ export function PlaybackPage(props: PlaybackPageProps) {
     const [sliderValue, setSliderValue] = useState(1);
     const [emotionValue, setEmotion] = useState("Neutral");
     const [audioUrl, setAudioUrl] = useState<string>();
+
+    const handleAsk = async (blob: Blob) =>{
+        const response = await ask(blob, props.articleText, emotionValue, sliderValue);
+        const url = URL.createObjectURL(response);
+        const audio = document.createElement("audio");
+        audio.src = url;
+        audio.controls = true;
+        document.body.appendChild(audio);
+    };
 
     const handleSliderChange = (event: any) => {
         setSliderValue(event.target.value);
@@ -50,6 +60,7 @@ export function PlaybackPage(props: PlaybackPageProps) {
 
     return <div>
         <AudioPlayerControls src={audioUrl} />
+        <RecordAudio onRecordAudio={handleAsk}/>
         <Select
             value={emotionValue}
             onChange={handleEmotionChange}
