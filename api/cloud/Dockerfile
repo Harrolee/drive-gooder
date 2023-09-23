@@ -1,6 +1,10 @@
-FROM python:3.10-slim-bullseye
+# from https://github.com/python-poetry/poetry/issues/1178#issuecomment-1238475183
 
-# install curl for health check purposes
+# Global ARG, available to all stages (if renewed)
+ARG WORKDIR="/app"
+
+FROM python:3.10-slim-bullseye AS base
+
 RUN apt-get clean \
     && apt-get -y update
 
@@ -12,16 +16,38 @@ RUN apt-get -y install nginx \
     && apt-get -y install ffmpeg \
     && apt-get -y install espeak
 
-WORKDIR /code
+FROM base AS builder
 
-COPY ./requirements.txt /code/requirements.txt
+# Renew (https://stackoverflow.com/a/53682110):
+ARG WORKDIR
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# Don't buffer `stdout`:
+ENV PYTHONUNBUFFERED=1
+# Don't create `.pyc` files:
+ENV PYTHONDONTWRITEBYTECODE=1
 
-COPY . /code
+WORKDIR ${WORKDIR}
+
+RUN pip install poetry && poetry config virtualenvs.in-project true > pipInstallPoetryOut 2>&1
+
+COPY . .
+
+RUN poetry install >poetryInstallOut 2>&1
+
+FROM builder as final
+
+# Renew (https://stackoverflow.com/a/53682110):
+ARG WORKDIR
+
+WORKDIR ${WORKDIR}
+
 COPY ./cloud/nginx.conf /etc/nginx
 RUN chmod +x ./cloud/start.sh
 
-EXPOSE 5003
+RUN adduser app -u 1000
+RUN usermod -aG sudo app
 
+# App-specific settings:
+
+EXPOSE 5003
 CMD ["./cloud/start.sh"]
