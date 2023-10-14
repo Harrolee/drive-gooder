@@ -1,22 +1,29 @@
+# Next:
+
+Learn why nginx fails on start
+
 # Drive Gooder
 
 # Setup
 
-* Install `ffmpeg`
-* Install Python 3.x
-* Install `espeak`
-* Install `mecab` (at least on M1 Macs)
-* Install `poetry` (`pip install poetry`)
-
+- Install `ffmpeg`
+- Install Python 3.x
+- Install `espeak`
+- Install `mecab` (at least on M1 Macs)
+- Install `poetry` (`pip install poetry`)
 
 # Docker / AWS
+
 ## Build Container
+
 docker build . -f cloud/Dockerfile -t drive-gooder-container-repository:{tag}
 
 ## Run Container Locally
-docker run -d -p 5003:5003 --env-file test.env drive-gooder-container-repository:{tag}
+
+docker run -p 5003:5003 --env-file test.env drive-gooder-container-repository:{tag}
 
 ## Push Container to ECR
+
 Will need to have the aws cli installed.
 Recommened to look at the `View push commands` output for the ecr repository in AWS.
 

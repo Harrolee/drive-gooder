@@ -30,9 +30,14 @@ WORKDIR ${WORKDIR}
 
 RUN pip install poetry && poetry config virtualenvs.in-project true > pipInstallPoetryOut 2>&1
 
-COPY . .
+RUN echo $(pwd)  
+
+COPY poetry.lock pyproject.toml ./
 
 RUN poetry install >poetryInstallOut 2>&1
+
+COPY cloud/start.sh cloud/uwsgi.ini .venv ./
+COPY backend ./backend
 
 FROM builder as final
 
@@ -42,12 +47,13 @@ ARG WORKDIR
 WORKDIR ${WORKDIR}
 
 COPY ./cloud/nginx.conf /etc/nginx
-RUN chmod +x ./cloud/start.sh
+RUN chmod +x start.sh
 
-RUN adduser app -u 1000
-RUN usermod -aG sudo app
+# RUN adduser app -u 1000
+# RUN usermod -aG sudo app
+# RUN chmod -R app /
 
 # App-specific settings:
 
 EXPOSE 5003
-CMD ["./cloud/start.sh"]
+CMD ["./start.sh"]

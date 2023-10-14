@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+set -e
+
+chown -R www-data /app 
+chown -R www-data /root
+
+nginx -t
 service nginx start
 source ./.venv/bin/activate
-uwsgi --ini cloud/uwsgi.ini -l 4096
+uwsgi --ini uwsgi.ini -l 4096
