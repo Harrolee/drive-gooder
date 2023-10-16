@@ -3,5 +3,9 @@ node_modules/
 .env
 api/output
 *.bak
+
+# you'll need to create this file on your own
+password
+
 # These are training checkpoints
 *.pth

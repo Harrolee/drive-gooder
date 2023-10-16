@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-chown -R www-data /app 
-chown -R www-data /root
-
+# www-data will run nginx
 nginx -t
 service nginx start
-source ./.venv/bin/activate
-uwsgi --ini uwsgi.ini -l 4096
+
+# appUser runs app
+head -n 3 /home/appUser/.bashrc
+su appUser -c "bash appUserStart.sh"

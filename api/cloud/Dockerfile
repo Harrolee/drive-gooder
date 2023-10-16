@@ -14,46 +14,42 @@ RUN apt-get -y install nginx \
     && apt-get -y install build-essential \
     && apt-get -y install libpq-dev \
     && apt-get -y install ffmpeg \
-    && apt-get -y install espeak
+    && apt-get -y install espeak \
+    && apt-get install sudo
+    # need sudo to securely switch to appUser
 
 FROM base AS builder
 
-# Renew (https://stackoverflow.com/a/53682110):
+# Renewing WORKDIR
 ARG WORKDIR
+WORKDIR ${WORKDIR}
 
 # Don't buffer `stdout`:
 ENV PYTHONUNBUFFERED=1
 # Don't create `.pyc` files:
 ENV PYTHONDONTWRITEBYTECODE=1
 
-WORKDIR ${WORKDIR}
-
-RUN pip install poetry && poetry config virtualenvs.in-project true > pipInstallPoetryOut 2>&1
-
-RUN echo $(pwd)  
-
+RUN pip install poetry && poetry config virtualenvs.in-project true
 COPY poetry.lock pyproject.toml ./
+RUN poetry install
 
-RUN poetry install >poetryInstallOut 2>&1
-
-COPY cloud/start.sh cloud/uwsgi.ini .venv ./
-COPY backend ./backend
+COPY .venv ./
 
 FROM builder as final
 
-# Renew (https://stackoverflow.com/a/53682110):
+# Renewing WORKDIR
 ARG WORKDIR
-
 WORKDIR ${WORKDIR}
 
-COPY ./cloud/nginx.conf /etc/nginx
+COPY backend ./backend
+COPY cloud/start.sh cloud/uwsgi.ini ./
 RUN chmod +x start.sh
+COPY ./cloud/nginx.conf /etc/nginx
 
-# RUN adduser app -u 1000
-# RUN usermod -aG sudo app
-# RUN chmod -R app /
-
-# App-specific settings:
+# configure appUser
+COPY cloud/password cloud/appUser.sh cloud/appUserStart.sh ./ 
+RUN chmod +x appUser.sh appUserStart.sh
+RUN ./appUser.sh
 
 EXPOSE 5003
 CMD ["./start.sh"]
