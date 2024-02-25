@@ -20,8 +20,17 @@ def text_to_speech(text: str, emotion: str, speed: float):
         os.remove(path)
 
 def _build_temporary_file_path():
+    output_path = os.path.join(_get_current_path(), "..", "..", "output")
+
+    if(not os.path.isdir(output_path)):
+        try:
+            os.mkdir(output_path)
+        except Exception as err:
+            print(f"Could not create output dir at {output_path}.\nError message:\n{err}",file=SystemError)
+    assert os.path.isdir(output_path), f"Gah! Somehow the path below does not exist\n{output_path}"
+
     filename = ''.join(random.choices(string.ascii_lowercase + string.digits, k=16))
-    return os.path.join(_get_current_path(), "..", "..", "output", f'{filename}.wav')
+    return os.path.join(output_path, f'{filename}.wav')
 
 def _get_current_path():
     return os.path.dirname(os.path.realpath(__file__))
