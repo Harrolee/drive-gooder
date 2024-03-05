@@ -1,0 +1,10 @@
+@startuml
+User -> Frontend: Opens website
+Frontend -> Frontend: Check token
+Frontend -> Backend: Auth Request
+Backend -> Google: OAuth redirect
+Google -> User: Present login page
+User -> Google: Login
+Google -> Backend: Oauth response
+Backend -> Frontend: Wrapped token
+Frontend -> User: Authenticated user page
