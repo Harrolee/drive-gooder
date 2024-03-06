@@ -1,6 +1,7 @@
 # Next:
 
-Learn why nginx fails on start
+Replace HTTPAuth with Flask Auth
+Follow this article: https://realpython.com/flask-google-login/
 
 # Drive Gooder
 
