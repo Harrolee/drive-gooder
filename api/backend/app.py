@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask, redirect, request, url_for, jsonify
 from flask_cors import CORS
-# from flask_httpauth import HTTPBasicAuth
 # Must import env vars before import modules that use env vars
 from dotenv import load_dotenv  # noqa
 load_dotenv(".env")  # noqa
@@ -22,7 +21,6 @@ from backend.data.user import User
 from typing import IO, Dict
 from backend.handlers.chunk_text import chunk_text_handler
 from backend.handlers.summarize import summarize_handler
-# from werkzeug.security import generate_password_hash, check_password_hash
 from os import environ, urandom
 from marshmallow import Schema, ValidationError
 import functools
@@ -43,10 +41,6 @@ import requests
 app = Flask(__name__)
 app.secret_key = urandom(24)
 CORS(app)
-# auth = HTTPBasicAuth()
-
-# basic_auth_username = environ["BASIC_AUTH_USERNAME"]
-# basic_auth_password = generate_password_hash(environ["BASIC_AUTH_PASSWORD"])
 
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
@@ -119,12 +113,6 @@ def validate_file_on_request(file_name: str):
 
     return Inner
 
-
-# @auth.verify_password
-# def verify_password(username, password):
-#     if username != basic_auth_username:
-#         return False
-#     return check_password_hash(basic_auth_password, password)
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
