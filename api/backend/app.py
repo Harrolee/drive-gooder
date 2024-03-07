@@ -23,7 +23,7 @@ from typing import IO, Dict
 from backend.handlers.chunk_text import chunk_text_handler
 from backend.handlers.summarize import summarize_handler
 # from werkzeug.security import generate_password_hash, check_password_hash
-from os import environ
+from os import environ, urandom
 from marshmallow import Schema, ValidationError
 import functools
 import json
@@ -41,6 +41,7 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 app = Flask(__name__)
+app.secret_key = urandom(24)
 CORS(app)
 # auth = HTTPBasicAuth()
 
@@ -59,12 +60,13 @@ GOOGLE_DISCOVERY_URL = (
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Naive database setup
-try:
-    init_db_command()
-except sqlite3.OperationalError:
-    # Assume it's already been created
-    pass
+def setup_db():
+    # Naive database setup
+    try:
+        init_db_command()
+    except sqlite3.OperationalError:
+        # Assume it's already been created
+        pass
 
 # OAuth 2 client setup
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -73,8 +75,6 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
-
-
 
 
 def validate_request_json(schema_obj: Schema):
@@ -130,11 +130,11 @@ def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
-
 #########
 # following this tutorial: https://realpython.com/flask-google-login/
 @app.route("/temp-homepage")
 def index():
+    setup_db()
     if current_user.is_authenticated:
         return (
             "<p>Hello, {}! You're logged in! Email: {}</p>"
@@ -276,5 +276,5 @@ def answer_question(file_data: IO, data: QuestionTextRequestDto):
     return answer_question_handler(file_data, data), 200
 
 
-if __name__ == "app":
-    app.run(port=5003)
+def start():
+    app.run(port=5003,ssl_context="adhoc")
