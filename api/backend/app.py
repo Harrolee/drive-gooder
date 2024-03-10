@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, redirect, request, url_for, jsonify
+from flask import Flask, abort, redirect, request, url_for, jsonify, make_response
 from flask_cors import CORS
 # Must import env vars before import modules that use env vars
 from dotenv import load_dotenv  # noqa
@@ -32,22 +32,24 @@ from flask_login import (
     login_required,
     login_user,
     logout_user,
-)
 
+)
 
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 
 app = Flask(__name__)
 app.secret_key = urandom(24)
-CORS(app)
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = 'True'
+CORS(app, origins="https://localhost:3000", supports_credentials=True)
 
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
-
+FRONTEND_DASHBOARD = environ["FRONTEND_DASHBOARD"]
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -142,6 +144,7 @@ def login():
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
+    print(f"redirect uri will be {request.base_url}")
     # Use library to construct the request for Google login and provide
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
@@ -199,7 +202,7 @@ def callback():
     else:
         return "User email not available or not verified by Google.", 400
 
-    # Create a user in your db with the information provided
+    # Create a user in your db with the information provilogin_userded
     # by Google
     user = User(
         id_=unique_id, name=users_name, email=users_email, profile_pic=picture
@@ -207,20 +210,27 @@ def callback():
 
     # Doesn't exist? Add it to the database.
     if not User.get(unique_id):
+        print("adding new user to db")
         User.create(unique_id, users_name, users_email, picture)
 
+    print("logging user in")
     # Begin user session by logging the user in
-    login_user(user)
+    loginSuccess = login_user(user)
+    print(f'login succeeded: {loginSuccess}')
 
+    print(f'current user: {current_user}')
+
+    print(f'cookie:\n{request.cookies}')
     # Send user back to homepage
-    return redirect(url_for("index"))
-
+    return redirect(FRONTEND_DASHBOARD)
+    # when the user logs in on the frontend, give them a session id
+    # in the frontend, store the session id in requests to the backend
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for(FRONTEND_DASHBOARD))
 
 #########
 
@@ -229,6 +239,19 @@ def logout():
 def authenticate():
     return "", 204
 
+@app.route("/me")
+def get_user_info():
+    print(f'/me cookie:\n{request.cookies}')
+
+    if current_user.is_authenticated:
+            {
+                "name": current_user.name,
+                # "profile_pic": current_user.profile_pic,
+            }
+    else:
+        # resp = make_response({"msg": "user is not authenticated"})
+        # resp.a
+        return {"msg": "user is not authenticated"}, 200
 
 @app.route("/", methods=["GET"])
 def healthCheck():
@@ -265,4 +288,5 @@ def answer_question(file_data: IO, data: QuestionTextRequestDto):
 
 
 def start():
-    app.run(port=5003,ssl_context="adhoc")
+    context = ('.cert/cert.pem', '.cert/key.pem')
+    app.run(port=5003,ssl_context=context)

@@ -1,4 +1,5 @@
 import axios from "axios";
+import fetchCookie from "fetch-cookie";
 
 const credentials = {
   username: "",
@@ -37,6 +38,20 @@ export const authenticate = async (username: string, password: string) => {
     });
 };
 
+export const oauth = async () => {
+  return axios
+    .get(`${process.env.REACT_APP_API_ROOT}/login`, {
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: buildAuthorizationHeaderFromStoredCredentials(),
+      },
+    })
+    .then((response) => {
+      return response;
+    });
+};
+
 export const getSplit = async (text: string): Promise<string[]> => {
   const data = {
     text: text,
@@ -61,6 +76,51 @@ export const getSplit = async (text: string): Promise<string[]> => {
     });
 };
 
+export const getUserInfo = async () => {
+  //   return axios
+  //     .get(`${process.env.REACT_APP_API_ROOT}/me`, {
+  //       headers: {
+  //         withCredentials: true,
+  //         "content-type": "application/json",
+  //         "Access-Control-Allow-Origin": "https://localhost:3000",
+  //       },
+  //     })
+  //     .then(async (response) => {
+  //       if (response.status === 401) {
+  //         console.log("returning a null value");
+  //         return null;
+  //       }
+  //       console.log(`returning axios response: ${JSON.stringify(response.data)}`);
+  //       return await response.data;
+  //     })
+  //     .catch((error) => {
+  //       console.log("error in the getUserInfo request");
+  //       console.error(error);
+  //       return Promise.reject();
+  //     });
+  // const fetchWrapper = fetchCookie(fetch);
+  return await fetch(`${process.env.REACT_APP_API_ROOT}/me`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "https://localhost:5003",
+      credentials: "include",
+    },
+  })
+    .then(async (response) => {
+      if (response.status === 401) {
+        console.log("returning a null value");
+        return null;
+      }
+      console.log("returning some json");
+      return await response.json();
+    })
+    .catch((error) => {
+      console.log("error in the getUserInfo request");
+      console.error(error);
+      return Promise.reject();
+    });
+};
 export const readText = (text: string, emotion: string, speed: number) => {
   const data = {
     text,
