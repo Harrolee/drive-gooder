@@ -42,6 +42,8 @@ app = Flask(__name__)
 app.secret_key = urandom(24)
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = 'True'
+app.config['SESSION_COOKIE_HTTPONLY'] = 'False'
+
 CORS(app, origins="https://localhost:3000", supports_credentials=True)
 
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
@@ -55,7 +57,7 @@ FRONTEND_DASHBOARD = environ["FRONTEND_DASHBOARD"]
 # https://flask-login.readthedocs.io/en/latest
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+# login_manager.
 def setup_db():
     # Naive database setup
     try:
@@ -215,7 +217,7 @@ def callback():
 
     print("logging user in")
     # Begin user session by logging the user in
-    loginSuccess = login_user(user)
+    loginSuccess = login_user(user, remember=True)
     print(f'login succeeded: {loginSuccess}')
 
     print(f'current user: {current_user}')

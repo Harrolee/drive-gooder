@@ -9,3 +9,6 @@ password
 
 # These are training checkpoints
 *.pth
+
+.cert
+local_cert
