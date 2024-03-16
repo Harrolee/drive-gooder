@@ -3,6 +3,7 @@ node_modules/
 .env
 api/output
 *.bak
+build
 
 # you'll need to create this file on your own
 password

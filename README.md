@@ -1,7 +1,7 @@
-# Next:
+# Next
 
-Replace HTTPAuth with Flask Auth
-Follow this article: https://realpython.com/flask-google-login/
+Add ssl to complete the oauth ritual:
+https://medium.com/swlh/deploy-and-secure-a-react-flask-app-with-docker-and-nginx-768ca582863b
 
 # Drive Gooder
 

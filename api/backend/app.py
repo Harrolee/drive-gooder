@@ -124,7 +124,7 @@ def get_google_provider_cfg():
 
 #########
 # following this tutorial: https://realpython.com/flask-google-login/
-@app.route("/temp-homepage")
+@app.route("/api/temp-homepage")
 def index():
     setup_db()
     if current_user.is_authenticated:
@@ -140,26 +140,28 @@ def index():
         return '<a class="button" href="/login">Google Login</a>'
     
 
-@app.route("/login")
+@app.route("/api/login")
 def login():
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-
-    print(f"redirect uri will be {request.base_url}")
+    callback_uri = "http://localhost/api/login/callback"
+    print(f"best not use {request.base_url} as the redirect uri. Try {callback_uri}")
     # Use library to construct the request for Google login and provide
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=request.base_url + "/callback",
+        redirect_uri=callback_uri,
         scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)
 
 
 
-@app.route("/login/callback")
+@app.route("/api/login/callback")
 def callback():
+
+    print("got to the callback, friendo")
     # Get authorization code Google sent back to you
     code = request.args.get("code")
 
@@ -228,7 +230,7 @@ def callback():
     # when the user logs in on the frontend, give them a session id
     # in the frontend, store the session id in requests to the backend
 
-@app.route("/logout")
+@app.route("/api/logout")
 @login_required
 def logout():
     logout_user()
@@ -236,12 +238,12 @@ def logout():
 
 #########
 
-@app.route("/authenticate", methods=["POST"])
+@app.route("/api/authenticate", methods=["POST"])
 @login_required
 def authenticate():
     return "", 204
 
-@app.route("/me")
+@app.route("/api/me")
 def get_user_info():
     print(f'/me cookie:\n{request.cookies}')
 
@@ -255,33 +257,33 @@ def get_user_info():
         # resp.a
         return {"msg": "user is not authenticated"}, 200
 
-@app.route("/", methods=["GET"])
+@app.route("/api/", methods=["GET"])
 def healthCheck():
     return "", 204
 
 
-@app.route("/summarize", methods=["POST"])
+@app.route("/api/summarize", methods=["POST"])
 @login_required
 @validate_request_json(SummarizeRequestSchema())
 def summarize(data: SummarizeRequestDto):
     return summarize_handler(data), 200
 
 
-@app.route("/split", methods=["POST"])
+@app.route("/api/split", methods=["POST"])
 @login_required
 @validate_request_json(ChunkTextRequestSchema())
 def chunk_text(data: ChunkTextRequestDto):
     return chunk_text_handler(data), 200
 
 
-@app.route("/read", methods=["POST"])
+@app.route("/api/read", methods=["POST"])
 @login_required
 @validate_request_json(ReadTextRequestSchema())
 def get_audio_for_text(data: ReadTextRequestDto):
     return get_audio_for_text_handler(data), 200
 
 
-@app.route("/ask", methods=["POST"])
+@app.route("/api/ask", methods=["POST"])
 @login_required
 @validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
