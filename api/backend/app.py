@@ -187,8 +187,7 @@ def callback():
     else:
         return "User email not available or not verified by Google.", 400
 
-    # Create a user in your db with the information provilogin_userded
-    # by Google
+    # Create a user in your db with the information provided by Google
     user = User(
         id_=unique_id, name=users_name, email=users_email, profile_pic=picture
     )
@@ -219,9 +218,11 @@ def logout():
 
 #########
 
-# @login_manager.unauthorized_handler
-# def unauthorized_callback():
-#     return redirect('/login?next=' + request.path)
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    # when you get fancy, use this:
+    # return redirect('/login?next=' + request.path)
+    return redirect('ROOT_URI')
 
 @app.route("/api/authenticate", methods=["POST"])
 @login_required
