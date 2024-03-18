@@ -41,10 +41,13 @@ FROM builder as final
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 
-COPY backend ./backend
+COPY backend backend
 COPY cloud/start.sh cloud/uwsgi.ini ./
 RUN chmod +x start.sh
 COPY ./cloud/nginx.conf /etc/nginx
+
+# copy built static FE to docker image
+COPY /build frontend
 
 # configure appUser
 COPY cloud/password cloud/appUser.sh cloud/appUserStart.sh ./ 

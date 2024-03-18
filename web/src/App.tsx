@@ -4,17 +4,22 @@ import { UnauthenticatedTemplate } from "./component/UnauthenticatedTemplate";
 import { AuthenticatedTemplate } from "./component/AuthenticatedTemplate";
 
 function App() {
-    const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-    const handleLogin = useCallback(() => {
-        setLoggedIn(true);
-    }, []);
+  const handleLogin = useCallback(() => {
+    setLoggedIn(true);
+  }, []);
 
-    if (!loggedIn) {
-        return <UnauthenticatedTemplate loginCallback={handleLogin} />;
-    }
+  // login check:
+  // send a request to a protected endpoint on the server for the user's info
+  // if the response is successful, set loggedIn to true and redirect to protected route
+  console.log(`logged in? ${loggedIn}`);
 
-    return <AuthenticatedTemplate />;
+  if (!loggedIn) {
+    return <UnauthenticatedTemplate loginCallback={handleLogin} />;
+  }
+
+  return <AuthenticatedTemplate />;
 }
 
 export default App;

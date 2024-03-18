@@ -1,6 +1,6 @@
-# Next:
+# Next
 
-Learn why nginx fails on start
+redirect the user to homepage when they are not authorized
 
 # Drive Gooder
 

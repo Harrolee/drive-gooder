@@ -11,7 +11,7 @@ def summarize(text: str):
 
     docs = [Document(page_content=t) for t in split_texts]
 
-    llm = OpenAI(temperature=0)
+    llm = OpenAI(temperature=0, model="gpt-3.5-turbo")
 
     chain = load_summarize_chain(llm, chain_type="map_reduce")
 
@@ -24,7 +24,7 @@ def speech_to_text(data: object):
     return transcript
 
 def ask_question(question: str, text: str):
-    chain = load_qa_chain(OpenAI(temperature=0), chain_type="stuff")
+    chain = load_qa_chain(OpenAI(temperature=0, model="gpt-3.5-turbo"), chain_type="stuff")
 
     text_splitter = CharacterTextSplitter()
     docs = text_splitter.create_documents(texts = [text])
