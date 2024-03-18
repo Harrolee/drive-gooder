@@ -234,11 +234,12 @@ def get_user_info():
     
     if current_user.is_authenticated:
         return {
+            "authenticated": "true",
             "name": current_user.name,
             # "profile_pic": current_user.profile_pic,
         }
     else:
-        return {"msg": "user is not authenticated"}, 200
+        return {"authenticated": "false"}, 200
 
 @app.route("/api/", methods=["GET"])
 def healthCheck():

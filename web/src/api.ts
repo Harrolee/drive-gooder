@@ -85,11 +85,9 @@ export const getUserInfo = async () => {
     },
   })
     .then(async (response) => {
-      if (response.status === 401) {
-        console.log("returning a null value");
-        return null;
+      if (!response.ok) {
+        return { authenticated: "false" };
       }
-      console.log("returning some json");
       return await response.json();
     })
     .catch((error) => {
