@@ -1,7 +1,6 @@
 # Next
 
-Add ssl to complete the oauth ritual:
-https://medium.com/swlh/deploy-and-secure-a-react-flask-app-with-docker-and-nginx-768ca582863b
+redirect the user to homepage when they are not authorized
 
 # Drive Gooder
 

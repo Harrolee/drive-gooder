@@ -15,11 +15,11 @@ function App() {
   // if the response is successful, set loggedIn to true and redirect to protected route
   console.log(`logged in? ${loggedIn}`);
 
-  // if (!loggedIn) {
-  return <UnauthenticatedTemplate loginCallback={handleLogin} />;
-  // }
+  if (!loggedIn) {
+    return <UnauthenticatedTemplate loginCallback={handleLogin} />;
+  }
 
-  // return <AuthenticatedTemplate />;
+  return <AuthenticatedTemplate />;
 }
 
 export default App;

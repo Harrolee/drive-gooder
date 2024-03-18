@@ -9,26 +9,12 @@ export interface UnauthenticatedTemplateProps {
 }
 
 export function UnauthenticatedTemplate(props: UnauthenticatedTemplateProps) {
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-
-  // const loginCallback = useCallback(() => {
-  //   storeLoginCredentials(username, password);
-  //   props.loginCallback();
-  // }, [username, password, props]);
-
   getUserInfo().then((userInfo) => {
     console.log(`userInfo: ${JSON.stringify(userInfo)}`);
-    if (userInfo !== null) {
+    if (userInfo.name !== null) {
       props.loginCallback();
     }
   });
 
   return <OAuthLogin loginCallback={props.loginCallback} />;
-  // <Login
-  //     username={username}
-  //     setUsername={setUsername}
-  //     password={password}
-  //     setPassword={setPassword}
-  //     loginCallback={loginCallback} />
 }

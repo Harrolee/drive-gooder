@@ -40,18 +40,13 @@ import requests
 
 app = Flask(__name__)
 app.secret_key = urandom(24)
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = 'True'
-app.config['SESSION_COOKIE_HTTPONLY'] = 'False'
-
-CORS(app, origins="https://localhost:3000", supports_credentials=True)
 
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 )
-FRONTEND_DASHBOARD = environ["FRONTEND_DASHBOARD"]
+ROOT_URI = environ["ROOT_URI"]
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
@@ -124,34 +119,20 @@ def get_google_provider_cfg():
 
 #########
 # following this tutorial: https://realpython.com/flask-google-login/
-@app.route("/api/temp-homepage")
-def index():
-    setup_db()
-    if current_user.is_authenticated:
-        return (
-            "<p>Hello, {}! You're logged in! Email: {}</p>"
-            "<div><p>Google Profile Picture:</p>"
-            '<img src="{}" alt="Google profile pic"></img></div>'
-            '<a class="button" href="/logout">Logout</a>'.format(
-                current_user.name, current_user.email, current_user.profile_pic
-            )
-        )
-    else:
-        return '<a class="button" href="/login">Google Login</a>'
-    
 
 @app.route("/api/login")
 def login():
+    setup_db()
     # Find out what URL to hit for Google login
     google_provider_cfg = get_google_provider_cfg()
     authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-    callback_uri = "http://localhost/api/login/callback"
-    print(f"best not use {request.base_url} as the redirect uri. Try {callback_uri}")
+
     # Use library to construct the request for Google login and provide
     # scopes that let you retrieve user's profile from Google
+    print(f'callback uri: {request.base_url + "/callback"}')
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=callback_uri,
+        redirect_uri=request.base_url + "/callback",
         scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)
@@ -226,7 +207,7 @@ def callback():
 
     print(f'cookie:\n{request.cookies}')
     # Send user back to homepage
-    return redirect(FRONTEND_DASHBOARD)
+    return redirect(ROOT_URI)
     # when the user logs in on the frontend, give them a session id
     # in the frontend, store the session id in requests to the backend
 
@@ -234,9 +215,13 @@ def callback():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for(FRONTEND_DASHBOARD))
+    return redirect(url_for(ROOT_URI))
 
 #########
+
+# @login_manager.unauthorized_handler
+# def unauthorized_callback():
+#     return redirect('/login?next=' + request.path)
 
 @app.route("/api/authenticate", methods=["POST"])
 @login_required
@@ -245,16 +230,14 @@ def authenticate():
 
 @app.route("/api/me")
 def get_user_info():
-    print(f'/me cookie:\n{request.cookies}')
-
+    setup_db()
+    
     if current_user.is_authenticated:
-            {
-                "name": current_user.name,
-                # "profile_pic": current_user.profile_pic,
-            }
+        return {
+            "name": current_user.name,
+            # "profile_pic": current_user.profile_pic,
+        }
     else:
-        # resp = make_response({"msg": "user is not authenticated"})
-        # resp.a
         return {"msg": "user is not authenticated"}, 200
 
 @app.route("/api/", methods=["GET"])
@@ -292,5 +275,4 @@ def answer_question(file_data: IO, data: QuestionTextRequestDto):
 
 
 def start():
-    context = ('.cert/cert.pem', '.cert/key.pem')
-    app.run(port=5003,ssl_context=context)
+    app.run(port=5003)
