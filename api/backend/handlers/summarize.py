@@ -8,10 +8,11 @@ from backend.llm.factory import build_summarizer, build_text_to_speech
 def summarize_handler(data: SummarizeRequestDto):
     summarizer = build_summarizer()
     summary = summarizer(data.text)
+    apology_string = "Apologies, friendo. We could not summarize that for you."
+    summary_text = summary.get('output_text', apology_string)
 
     text_to_speech = build_text_to_speech()
-    audio_content = text_to_speech(summary, data.emotion, data.speed)
-
+    audio_content = text_to_speech(summary_text, data.emotion, data.speed)
     file_contents = io.BytesIO(audio_content)
     file_contents.seek(0)
 
