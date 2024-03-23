@@ -6,7 +6,7 @@ from backend.request_models import QuestionTextRequestDto
 from backend.llm.factory import build_speech_to_text, build_ask_question, build_text_to_speech
 
 
-def answer_question_handler(question_audio, data: QuestionTextRequestDto):
+def answer_question_handler(question_audio: IO, data: QuestionTextRequestDto):
     speech_to_text = build_speech_to_text()
     question_text = speech_to_text(question_audio)
 

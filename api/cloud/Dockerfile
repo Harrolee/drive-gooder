@@ -29,17 +29,22 @@ ENV PYTHONUNBUFFERED=1
 # Don't create `.pyc` files:
 ENV PYTHONDONTWRITEBYTECODE=1
 
+RUN pip install --upgrade pip
+
 RUN pip install poetry && poetry config virtualenvs.in-project true
 COPY poetry.lock pyproject.toml ./
-RUN poetry install
+# below line to sate coqui tts
+# RUN pip wheel --no-cache-dir --use-pep517 "sudachipy (==0.6.8)"
 
-COPY .venv ./
+RUN poetry install -vv -n
 
 FROM builder as final
 
-# Renewing WORKDIR
+# # Renewing WORKDIR
 ARG WORKDIR
 WORKDIR ${WORKDIR}
+
+COPY --from=builder ${WORKDIR}/.venv .
 
 COPY backend backend
 COPY cloud/start.sh cloud/uwsgi.ini ./
@@ -54,5 +59,6 @@ COPY cloud/password cloud/appUser.sh cloud/appUserStart.sh ./
 RUN chmod +x appUser.sh appUserStart.sh
 RUN ./appUser.sh
 
-EXPOSE 5003
+EXPOSE 80
+EXPOSE 443
 CMD ["./start.sh"]

@@ -1,6 +1,7 @@
 # Next
 
-redirect the user to homepage when they are not authorized
+- redirect the user to homepage when they are not authorized
+- split code in app.py into multiple files
 
 # Drive Gooder
 

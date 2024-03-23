@@ -7,8 +7,9 @@ docker run -d \
   --env-file .env \
   --name devtest \
   --mount type=bind,readonly,source=./sslCert,target=/etc/nginx/certs \
-  drive-gooder-container-repository:{tag}
-
+  does-it-work
+  # drive-gooder-container-repository:{tag}
+  
 # debugging
 docker run \
   --entrypoint /bin/bash \
