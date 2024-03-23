@@ -1,5 +1,4 @@
-import io
-import tempfile
+import uuid
 from typing import IO
 from langchain_openai import OpenAI as langchain_openai
 from langchain.text_splitter import CharacterTextSplitter
@@ -7,6 +6,7 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.chains.question_answering import load_qa_chain
 from openai import OpenAI
+import pathlib
 
 openai_client = OpenAI()
 
@@ -23,29 +23,18 @@ def summarize(text: str):
     return summary
 
 def speech_to_text(data: IO):
-    # this is a wav file
-    print(f'\n\n\n unicorns \n\n\n')
-    print(f'\n\n\n {type(data)} \n\n\n')
-    print(f'\n\n\n {dir(data)} \n\n\n')
-    print(f'\n\n\n unicorns \n\n\n')
-
-    with tempfile.NamedTemporaryFile(delete=True) as temp_file:
-        # Save the contents of the FileStorage object to the temporary file
-        data.save(temp_file.name)
-        # Open the temporary file as an io.IOBase instance
-        with open(temp_file.name, 'rb') as f:
-            io_base_instance = io.BytesIO(f.read())
-
-    transcript = openai_client.audio.transcriptions.create(file=io_base_instance, model="whisper-1")
-
+    temp_file = f'{uuid.uuid4()}.wav'
+    data.save(temp_file)
+    transcript = openai_client.audio.transcriptions.create(file=pathlib.Path(temp_file), model="whisper-1").text
+    # delete the file
+    pathlib.Path(temp_file).unlink()
     return transcript
 
 def ask_question(question: str, text: str):
-    chain = load_qa_chain(langchain_openai(temperature=0, model="gpt-3.5-turbo"), chain_type="stuff")
-
+    chain = load_qa_chain(langchain_openai(temperature=0, model="gpt-3.5-turbo-instruct"), chain_type="stuff")
     text_splitter = CharacterTextSplitter()
     docs = text_splitter.create_documents(texts = [text])
 
-    result = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
+    result = chain.invoke({"input_documents": docs, "question": question}, return_only_outputs=True)
 
     return result["output_text"]
