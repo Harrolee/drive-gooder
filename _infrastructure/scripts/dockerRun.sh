@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # for realz!!
-docker run -d \
+docker run \
   -p 80:80 \
   -p 443:443 \
+  -p 44022:22 \
   --env-file .env \
   --name devtest \
-  --mount type=bind,readonly,source=./sslCert,target=/etc/nginx/certs \
-  does-it-work
+  ssh-test
+  # --mount type=bind,readonly,source=./sslCert,target=/etc/nginx/certs \
   # drive-gooder-container-repository:{tag}
   
 # debugging
