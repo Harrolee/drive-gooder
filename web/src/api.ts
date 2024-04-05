@@ -1,5 +1,4 @@
 import axios from "axios";
-import fetchCookie from "fetch-cookie";
 
 const credentials = {
   username: "",

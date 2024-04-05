@@ -1,8 +1,5 @@
-import { useCallback, useState } from "react";
-import { getUserInfo, storeLoginCredentials } from "../api";
-// import Login from "./Login";
+import { getUserInfo } from "../api";
 import OAuthLogin from "./OAuthLogin";
-import React from "react";
 
 export interface UnauthenticatedTemplateProps {
   loginCallback: VoidFunction;
