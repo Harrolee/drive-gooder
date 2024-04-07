@@ -1,4 +1,3 @@
-from typing import BinaryIO
 from flask import send_file
 from backend.request_models import ReadTextRequestDto
 from backend.llm.factory import build_text_to_speech

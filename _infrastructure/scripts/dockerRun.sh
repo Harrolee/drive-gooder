@@ -4,12 +4,8 @@
 docker run \
   -p 80:80 \
   -p 443:443 \
-  -p 44022:22 \
   --env-file .env \
   --name devtest \
-  ssh-test
-  # --mount type=bind,readonly,source=./sslCert,target=/etc/nginx/certs \
-  # drive-gooder-container-repository:{tag}
   
 # debugging
 docker run \
@@ -18,5 +14,8 @@ docker run \
   -p 80:80 \
   --env-file .env \
   --name devtest \
-  --mount type=bind,readonly,source=./sslCert,target=/etc/nginx/certs \
   does-it-work
+
+
+# cross-platform build
+docker buildx build . -f cloud/BaseImage.Dockerfile --platform=linux/amd64 --push -t halzinnia/drive-gooder-base:v0.0.5amd -t halzinnia/drive-gooder-base:latest

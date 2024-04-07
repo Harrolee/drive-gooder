@@ -1,25 +1,24 @@
 ARG WORKDIR="/app"
 
-FROM halzinnia/drive-gooder-base:v0.0.2
+FROM halzinnia/drive-gooder-base:v0.0.6arm
 
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 
-COPY backend backend
-COPY cloud/start.sh cloud/uwsgi.ini ./
-RUN chmod +x start.sh
-COPY ./cloud/nginx.conf /etc/nginx
+# create ssl cert to encrypt requests between FE and BE
+# too careful? maybe.
+RUN mkdir /etc/nginx/certs \
+    && cd /etc/nginx/certs \ 
+    && openssl req -x509 -newkey \
+    rsa:4096 -keyout key.pem -out cert.pem \
+    -sha256 -days 365 -nodes -subj "/C=US/ST=IN/L=Indianapolis/O=BTYT/OU=clowns/CN=drive-gooder"
 
-# copy built static FE to docker image
-COPY /build frontend
+COPY ./cloud/nginx.conf /etc/nginx/nginx.conf
 
-# copy the cert in 
-COPY /sslCert /etc/nginx/certs
-
-# configure appUser
-COPY cloud/password cloud/appUser.sh cloud/appUserStart.sh ./ 
-RUN chmod +x appUser.sh appUserStart.sh
-RUN ./appUser.sh
+COPY --chown=1007:1010 backend backend
+COPY --chown=1007:1010 /build frontend
+COPY --chown=1007:1010 cloud/uwsgi.ini cloud/start.sh cloud/appUserStart.sh ./
+RUN chmod +x start.sh appUserStart.sh
 
 # add a dev ssh key
 # RUN mkdir /home/appUser/.ssh

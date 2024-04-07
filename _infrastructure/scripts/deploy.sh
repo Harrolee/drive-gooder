@@ -10,7 +10,8 @@ cd web || exit 1
 # Build and run Dockerfile
 cd api || exit 1
 
-docker build . -f cloud/Dockerfile -t drive-gooder-container-repository:"${CONTAINER_TAG}".
+docker build . -f cloud/BaseImage.Dockerfile -t drive-gooder-base:v0.0.6arm
+docker build . -f cloud/Final.Dockerfile -t drive-gooder-container-repository:"${CONTAINER_TAG}"
 
 docker run -d \
   -p 80:80 \
