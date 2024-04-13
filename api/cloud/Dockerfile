@@ -34,9 +34,9 @@ RUN groupadd --gid 1010 socketWriters                                           
     && chown -R appUser /app
 
 # sate netskope
-COPY cloud/nscacert.pem /etc/ssl/certs/nscacert.pem
-ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/nscacert.pem"
-ENV PYTHONHTTPSVERIFY=0
+# COPY cloud/nscacert.pem /etc/ssl/certs/nscacert.pem
+# ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/nscacert.pem"
+# ENV PYTHONHTTPSVERIFY=0
 
 USER appUser
 ENV PATH="${PATH}:/home/appUser/.local/bin"
