@@ -6,6 +6,11 @@ docker run \
   -p 443:443 \
   --env-file .env \
   --name devtest \
+
+docker run \
+  -p 3000:3000 \
+  --env-file .env \
+  --name devtest \
   
 # debugging
 docker run \

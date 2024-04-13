@@ -59,6 +59,7 @@ class QuestionTextRequestSchema(Schema):
 
 class QuestionTextRequestDto:
     def __init__(self, text, emotion, speed) -> None:
+        # add fields here so that there is more information available to the llm about the user's query?
         self.text = text
         self.emotion = emotion
         self.speed = speed

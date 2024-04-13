@@ -65,6 +65,7 @@ RUN chmod +x start.sh appUserStart.sh
 # COPY id_rsa.pub /appUser/.ssh/authorized_keys
 # RUN chmod 600 /home/appUser/.ssh
 
-EXPOSE 80
-EXPOSE 443
+# EXPOSE 80
+# EXPOSE 443
+EXPOSE 3000
 CMD ["./start.sh"]
