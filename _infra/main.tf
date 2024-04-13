@@ -41,8 +41,8 @@ locals {
 
 ## Route53 
 
-resource "aws_route53_zone" "this" {
-  name = local.domain_name
+data "aws_route53_zone" "this" {
+  zone_id = "Z007800313809J5UHGT8S"
 }
 
 # the above outputs both zone id: .zone_id and record id: .id
@@ -58,8 +58,8 @@ resource "aws_route53_record" "app_runner" {
 
   name = aws_apprunner_custom_domain_association.this.certificate_validation_records.*.name[count.index]
   type = aws_apprunner_custom_domain_association.this.certificate_validation_records.*.type[count.index]
-  ttl = 7200
-  zone_id = aws_route53_zone.this.id
+  ttl = 60
+  zone_id = data.aws_route53_zone.this.id
 
   records = [aws_apprunner_custom_domain_association.this.certificate_validation_records.*.value[count.index]]
 }
@@ -67,7 +67,7 @@ resource "aws_route53_record" "app_runner" {
 # Root SSL Cert and API validations
 
 resource "aws_acm_certificate" "root_cert" {
-  domain_name = aws_route53_zone.this.name
+  domain_name = data.aws_route53_zone.this.name
   validation_method = "DNS"
 
   lifecycle {
