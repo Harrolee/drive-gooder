@@ -41,6 +41,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = urandom(24)
 
+print(environ["REQUESTS_CA_BUNDLE"])
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 GOOGLE_DISCOVERY_URL = (
@@ -269,7 +270,7 @@ def get_audio_for_text(data: ReadTextRequestDto):
 
 
 @app.route("/api/ask", methods=["POST"])
-@login_required
+# @login_required
 @validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
 def answer_question(file_data: IO, data: QuestionTextRequestDto):
