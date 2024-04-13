@@ -33,7 +33,7 @@ def answer_question_handler(question_audio: IO, data: QuestionTextRequestDto):
         # Or would you like to hear a summary of a different article"
 
     text_to_speech = build_text_to_speech()
-    audio_content = text_to_speech(answer_text, data.emotion, data.speed)
+    audio_content = text_to_speech(answer_text + followup_answer, data.emotion, data.speed)
 
     file_contents = io.BytesIO(audio_content)
     file_contents.seek(0)

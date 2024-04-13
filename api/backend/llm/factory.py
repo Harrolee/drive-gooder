@@ -36,6 +36,7 @@ def build_text_to_speech():
             return modal_coqui_text_to_speech
     raise Exception("Unsupported TEXT_TO_SPEECH_MODEL value")
 
+
 def build_supplementary_info():
     match question_model:
         case "research_paper":
