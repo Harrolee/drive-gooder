@@ -132,10 +132,10 @@ def login():
     # scopes that let you retrieve user's profile from Google
     redirect_uri = "https://drive-gooder.com/api/login"
     # print(f'callback uri: {request.base_url + "/callback"}')
-    print(f'callback uri: {redirect_uri + "/callback"}')
+    print(f'callback uri: {request.base_url + "/callback"}')
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=redirect_uri + "/callback",
+        redirect_uri=request.base_url + "/callback",
         scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)

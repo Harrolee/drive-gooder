@@ -98,6 +98,7 @@ resource "aws_apprunner_service" "this" {
         runtime_environment_secrets = {
           GOOGLE_CLIENT_SECRET="arn:aws:secretsmanager:us-east-2:310753928788:secret:drive-gooder-secrets-5lmhvt:GOOGLE_CLIENT_SECRET::"
           OPENAI_API_KEY="arn:aws:secretsmanager:us-east-2:310753928788:secret:drive-gooder-secrets-5lmhvt:OPENAI_API_KEY::"
+          MODAL_AUTH_TOKEN="arn:aws:secretsmanager:us-east-2:310753928788:secret:drive-gooder-secrets-5lmhvt:MODAL_AUTH_TOKEN::"
         }
         }
         image_identifier      = local.container_image
