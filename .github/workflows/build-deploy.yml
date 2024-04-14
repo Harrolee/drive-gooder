@@ -28,7 +28,7 @@ jobs:
       - name: Build FE
         run: |
           cd web
-          npm run build
+          npm run build-production
           # FE build will be in build
 
       - uses: actions/upload-artifact@v4
