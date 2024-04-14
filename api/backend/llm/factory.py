@@ -6,6 +6,7 @@ from backend.dataloaders.arxiv import supplementary_info as arxiv_supplementary_
 summarize_model = environ["SUMMARIZE_MODEL"].lower()
 speech_to_text_model = environ["SPEECH_TO_TEXT_MODEL"].lower()
 text_to_speech_model = environ["TEXT_TO_SPEECH_MODEL"].lower()
+question_model = environ["QUESTION_MODEL"].lower()
 
 
 def build_summarizer():
