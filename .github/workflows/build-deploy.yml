@@ -21,6 +21,7 @@ jobs:
 
       - name: Build FE
         run: |
+          echo ${{ vars.REACT_APP_API_ROOT }}
           cd web
           npm install
 
