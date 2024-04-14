@@ -130,8 +130,6 @@ def login():
 
     # Use library to construct the request for Google login and provide
     # scopes that let you retrieve user's profile from Google
-    redirect_uri = "https://drive-gooder.com/api/login"
-    # print(f'callback uri: {request.base_url + "/callback"}')
     print(f'callback uri: {request.base_url + "/callback"}')
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
@@ -144,9 +142,6 @@ def login():
 
 @app.route("/api/login/callback")
 def callback():
-    print("I think both of the below urls need to use https")
-    print(f"request url: {request.url}")
-    print(f"request base url: {request.base_url}")
     print("got to the callback, friendo")
     # Get authorization code Google sent back to you
     code = request.args.get("code")
@@ -155,7 +150,6 @@ def callback():
     # things on behalf of a user
     google_provider_cfg = get_google_provider_cfg()
     token_endpoint = google_provider_cfg["token_endpoint"]
-    print(f"token endpoint {token_endpoint}")
     # Prepare and send a request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
@@ -170,20 +164,16 @@ def callback():
         data=body,
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
     )
-    print(f"we probably get to here before the error")
+
     # Parse the tokens!
     client.parse_request_body_response(json.dumps(token_response.json()))
-    print(f"I don't expect to see this message.")
-
 
     # Now that you have tokens (yay) let's find and hit the URL
     # from Google that gives you the user's profile information,
     # including their Google profile image and email
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
-    print(f"improbably, we have added a token")
     userinfo_response = requests.get(uri, headers=headers, data=body)
-    print(f"perhaps it fails after userinfo_response")
 
     # You want to make sure their email is verified.
     # The user authenticated with Google, authorized your
@@ -210,10 +200,8 @@ def callback():
     # Begin user session by logging the user in
     loginSuccess = login_user(user, remember=True)
     print(f'login succeeded: {loginSuccess}')
-
     print(f'current user: {current_user}')
 
-    print(f'cookie:\n{request.cookies}')
     # Send user back to homepage
     return redirect(ROOT_URI)
     # when the user logs in on the frontend, give them a session id
