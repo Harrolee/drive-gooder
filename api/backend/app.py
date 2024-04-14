@@ -130,7 +130,7 @@ def login():
 
     # Use library to construct the request for Google login and provide
     # scopes that let you retrieve user's profile from Google
-    redirect_uri = "https://drive-gooder.com/api"
+    redirect_uri = "https://drive-gooder.com/api/login"
     # print(f'callback uri: {request.base_url + "/callback"}')
     print(f'callback uri: {redirect_uri + "/callback"}')
     request_uri = client.prepare_request_uri(
