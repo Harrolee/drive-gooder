@@ -21,15 +21,13 @@ jobs:
 
       - name: Build FE
         run: |
-          echo ${{ vars.REACT_APP_API_ROOT }}
           cd web
           npm install
 
       - name: Build FE
         run: |
           cd web
-          npm run build-production
-          # FE build will be in build
+          npm run build
 
       - uses: actions/upload-artifact@v4
         with:

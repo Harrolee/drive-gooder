@@ -5,6 +5,8 @@ const credentials = {
   password: "",
 };
 
+const API_ROOT = "https://drive-gooder.com/api";
+
 export const storeLoginCredentials = (username: string, password: string) => {
   credentials.username = username;
   credentials.password = password;
@@ -21,7 +23,7 @@ const buildAuthorizationHeader = (username: string, password: string) => {
 
 export const authenticate = async (username: string, password: string) => {
   return axios
-    .post(`${process.env.REACT_APP_API_ROOT}/authenticate`, null, {
+    .post(`${API_ROOT}/authenticate`, null, {
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -39,7 +41,7 @@ export const authenticate = async (username: string, password: string) => {
 
 export const oauth = async () => {
   return axios
-    .get(`${process.env.REACT_APP_API_ROOT}/login`, {
+    .get(`${API_ROOT}/login`, {
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Origin": "*",
@@ -56,7 +58,7 @@ export const getSplit = async (text: string): Promise<string[]> => {
     text: text,
   };
 
-  return fetch(`${process.env.REACT_APP_API_ROOT}/split`, {
+  return fetch(`${API_ROOT}/split`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -76,7 +78,7 @@ export const getSplit = async (text: string): Promise<string[]> => {
 };
 
 export const getUserInfo = async () => {
-  return await fetch(`${process.env.REACT_APP_API_ROOT}/me`, {
+  return await fetch(`${API_ROOT}/me`, {
     method: "GET",
     headers: {
       "content-type": "application/json",
@@ -102,7 +104,7 @@ export const readText = (text: string, emotion: string, speed: number) => {
     speed,
   };
 
-  return fetch(`${process.env.REACT_APP_API_ROOT}/read`, {
+  return fetch(`${API_ROOT}/read`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -133,7 +135,7 @@ export const ask = (
   formData.set("speed", speed.toString());
   formData.set("question.wav", audio);
 
-  return fetch(`${process.env.REACT_APP_API_ROOT}/ask`, {
+  return fetch(`${API_ROOT}/ask`, {
     method: "POST",
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -162,7 +164,7 @@ export const summarize = (
     speed,
   };
 
-  return fetch(`${process.env.REACT_APP_API_ROOT}/summarize`, {
+  return fetch(`${API_ROOT}/summarize`, {
     method: "POST",
     headers: {
       "content-type": "application/json",

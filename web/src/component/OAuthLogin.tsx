@@ -3,9 +3,10 @@ import { FormControl, Button, Box } from "@mui/material";
 export interface OAuthLoginProps {
   loginCallback: VoidFunction;
 }
+const API_ROOT = "https://drive-gooder.com/api";
 export default function OAuthLogin(props: OAuthLoginProps) {
   const handleOauth = () => {
-    window.open(`${process.env.REACT_APP_API_ROOT}/login`, "_self");
+    window.open(`${API_ROOT}/login`, "_self");
   };
 
   return (
