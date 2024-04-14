@@ -11,6 +11,7 @@ export default function OAuthLogin(props: OAuthLoginProps) {
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
       <FormControl>
+        <h1>testing</h1>
         <Button onClick={handleOauth}>OAuth2 Login</Button>
       </FormControl>
     </Box>
