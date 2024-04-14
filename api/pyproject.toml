@@ -21,7 +21,6 @@ requests = "^2.31.0"
 flask-login = "^0.6.3"
 langchain-openai = "^0.0.8"
 transformers = "^4.39.3"
-torch = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core"]
