@@ -53,6 +53,21 @@ resource "aws_apprunner_custom_domain_association" "this" {
   service_arn = aws_apprunner_service.this.arn
 }
 
+# this block directs traffic from custom domain to apprunner service
+# resource "aws_route53_record" "api" {
+#   name = "${data.aws_route53_zone.main.name}"
+#   zone_id = data.aws_route53_zone.main.id
+#   type = "A"
+
+#   alias {
+#     name = aws_apprunner_custom_domain_association.dns_target # aws_apprunner_service.this.service_url
+#     zone_id = aws_apprunner_service.this.zone_id
+#     evaluate_target_health = true
+#   }
+
+# }
+
+# this resources creates certificate validation records
 resource "aws_route53_record" "app_runner" {
   count = length(aws_apprunner_custom_domain_association.this.certificate_validation_records)
 
