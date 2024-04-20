@@ -20,7 +20,6 @@ pyopenssl = "^24.0.0"
 requests = "^2.31.0"
 flask-login = "^0.6.3"
 langchain-openai = "^0.0.8"
-transformers = "^4.39.3"
 
 [build-system]
 requires = ["poetry-core"]
