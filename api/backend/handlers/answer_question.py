@@ -23,9 +23,10 @@ def answer_question_handler(question_audio: IO, data: QuestionTextRequestDto):
     ask_question = build_ask_question()
     answer_text = ask_question(question_text, data.text)
 
-    # question_type = classify_question_type(question_text)
-    # supplementary_info = build_supplementary_info(question_type)
-    # followup_answer = supplementary_info(question_text, answer_text)
+    question_type = classify_question_type(question_text)
+    supplementary_info = build_supplementary_info(question_type)
+    followup_answer = supplementary_info(question_text, answer_text)
+    print(followup_answer)
     # add follow-up answer:
         # "here is an arxiv article related to your question.
         # The title is "". The summary is "" and the authors are "".
@@ -33,7 +34,7 @@ def answer_question_handler(question_audio: IO, data: QuestionTextRequestDto):
         # Or would you like to hear a summary of a different article"
 
     text_to_speech = build_text_to_speech()
-    audio_content = text_to_speech(answer_text, data.emotion, data.speed)
+    audio_content = text_to_speech(answer_text + followup_answer, data.emotion, data.speed)
 
     file_contents = io.BytesIO(audio_content)
     file_contents.seek(0)

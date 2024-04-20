@@ -24,7 +24,7 @@ RUN groupadd --gid 1010 socketWriters                                           
 # create appUser
 # gid 1010 is socketWriters
 # uid 1007 will own the /app dir
-# Coqui saves models to the user's home dir, so we need to create a user with a home dir
+# we need to create a user with a home dir
     && useradd -u 1007 -g 1010 -m -p "$(cat password)" appUser                  \ 
     && shred -u password                                                        \
 # set HOME on non-login user changes for appUser:
