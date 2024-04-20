@@ -41,6 +41,7 @@ import requests
 app = Flask(__name__)
 app.secret_key = urandom(24)
 
+# print(environ["REQUESTS_CA_BUNDLE"])
 GOOGLE_CLIENT_ID = environ["GOOGLE_CLIENT_ID"]
 GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 GOOGLE_DISCOVERY_URL = (
@@ -141,7 +142,6 @@ def login():
 
 @app.route("/api/login/callback")
 def callback():
-
     print("got to the callback, friendo")
     # Get authorization code Google sent back to you
     code = request.args.get("code")
@@ -150,7 +150,6 @@ def callback():
     # things on behalf of a user
     google_provider_cfg = get_google_provider_cfg()
     token_endpoint = google_provider_cfg["token_endpoint"]
-
     # Prepare and send a request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
@@ -158,6 +157,7 @@ def callback():
         redirect_url=request.base_url,
         code=code
     )
+    print(f"token url {token_url}")
     token_response = requests.post(
         token_url,
         headers=headers,
@@ -167,7 +167,6 @@ def callback():
 
     # Parse the tokens!
     client.parse_request_body_response(json.dumps(token_response.json()))
-
 
     # Now that you have tokens (yay) let's find and hit the URL
     # from Google that gives you the user's profile information,
@@ -201,10 +200,8 @@ def callback():
     # Begin user session by logging the user in
     loginSuccess = login_user(user, remember=True)
     print(f'login succeeded: {loginSuccess}')
-
     print(f'current user: {current_user}')
 
-    print(f'cookie:\n{request.cookies}')
     # Send user back to homepage
     return redirect(ROOT_URI)
     # when the user logs in on the frontend, give them a session id
@@ -269,7 +266,7 @@ def get_audio_for_text(data: ReadTextRequestDto):
 
 
 @app.route("/api/ask", methods=["POST"])
-@login_required
+# @login_required
 @validate_file_on_request("question.wav")
 @validate_request_form(QuestionTextRequestSchema())
 def answer_question(file_data: IO, data: QuestionTextRequestDto):

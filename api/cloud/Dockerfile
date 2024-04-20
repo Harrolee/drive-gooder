@@ -33,6 +33,11 @@ RUN groupadd --gid 1010 socketWriters                                           
     && sed -i '1s;^;source ./.venv/bin/activate\n;' /home/appUser/.bashrc       \
     && chown -R appUser /app
 
+# sate netskope
+# COPY cloud/nscacert.pem /etc/ssl/certs/nscacert.pem
+# ENV REQUESTS_CA_BUNDLE="/etc/ssl/certs/nscacert.pem"
+# ENV PYTHONHTTPSVERIFY=0
+
 USER appUser
 ENV PATH="${PATH}:/home/appUser/.local/bin"
 RUN pip install --upgrade pip \
@@ -65,6 +70,7 @@ RUN chmod +x start.sh appUserStart.sh
 # COPY id_rsa.pub /appUser/.ssh/authorized_keys
 # RUN chmod 600 /home/appUser/.ssh
 
-EXPOSE 80
-EXPOSE 443
+# EXPOSE 80
+# EXPOSE 443
+EXPOSE 3000
 CMD ["./start.sh"]
