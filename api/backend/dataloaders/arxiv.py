@@ -1,18 +1,17 @@
 from langchain_community.document_loaders import ArxivLoader
 from langchain_core.documents.base import Document
-from transformers import pipeline
-
-TOKEN_CLASSIFIER = "ml6team/keyphrase-extraction-distilbert-inspec"
+import modal
 # yanekyuk/bert-uncased-keyword-extractor -- this model is very fast but does not always find tokens. Perhaps it is the correct choice for general questions 
 # ml6team/keyphrase-extraction-distilbert-inspec -- use this model for science-y questions: 
 
 def supplementary_info(question_text: str, answer_text: str):
     
+    find_keywords = modal.Function.lookup("find_keyword", "find_keywords")
     # convert question_text into a query for arxiv
         # extract topic from string
-    query = find_keywords(question_text)
+    query = find_keywords.remote(question_text)
     document = find_arxiv_document(query)
-
+    
 
     # convert answer_text into a query for arxi
 
@@ -25,24 +24,6 @@ def supplementary_info(question_text: str, answer_text: str):
         Would you like to hear the article?
         Would you like to hear a summary of a different article?"
         """
-
-
-def find_keywords(text) -> str:
-    """
-    If keywords are found, find_keywords returns a string containing the top three keywords from the text.
-    If no keywords are found, find_keywords returns a string containing the word "no-tokens-found".
-    """
-    pipe = pipeline("token-classification", model=TOKEN_CLASSIFIER)
-    keywords = pipe(text)
-
-    if len(keywords) == 0:
-        return "no-tokens-found"
-    if len(keywords) > 3:
-        keywords = keywords[:3]
-    print(keywords)
-    keywords = [k.get("word") for k in keywords]
-    keywords = " ".join(keywords)
-    return keywords
 
 def find_arxiv_document(query_string) -> Document:
     docs = ArxivLoader(query=query_string, load_max_docs=1).load() 
