@@ -1,5 +1,17 @@
-Copyright 2023 Lee Harrold, David Sampson, Kevin Vosburgh, Aaron Alexander, Nate White
+Copyright 2023 SEP
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so.
+End User License Agreement (EULA)
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Grant of License: SEP ("Licensor") grants you ("Licensee") a non-exclusive, non-transferable license to use the software code ("Code") subject to the terms and conditions of this agreement.
+Restrictions on Use: Licensee agrees not to use, modify, or distribute the Code for the purpose of developing, marketing, or operating any software or service that competes directly or indirectly with SEP's product "Drive-Gooder" or any substantially similar product.
+
+Intellectual Property Rights: All intellectual property rights in the Code remain with Licensor. Licensee shall not remove or alter any copyright, trademark, or other proprietary notices contained in the Code.
+
+Disclaimer of Warranty: The Code is provided "as is" without warranty of any kind, express or implied. Licensor disclaims all warranties, including but not limited to the implied warranties of merchantability and fitness for a particular purpose.
+
+Limitation of Liability: Licensor shall not be liable for any damages arising out of the use or inability to use the Code, including but not limited to direct, indirect, incidental, special, or consequential damages.
+
+Termination: This license is effective until terminated. Licensor may terminate this license at any time upon violation of the terms herein. Upon termination, Licensee must cease all use of the Code and destroy all copies in their possession.
+
+Governing Law: This agreement shall be governed by and construed in accordance with the laws of the United States of America.
+By using the Code, Licensee agrees to be bound by the terms and conditions of this agreement.
